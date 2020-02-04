@@ -40,7 +40,7 @@ def callback():
     except:
         return jsonify({'message' : 'error'})
     print("No error")
-    return jsonify({'message' : json_line })
+    return jsonify({'message' : "Hi " + json_line })
 
     # json_line = json.dumps(json_line)
     # decoded = json.loads(json_line)
