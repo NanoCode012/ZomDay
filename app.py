@@ -38,7 +38,7 @@ def callback():
     try:
         name = request.args["name"]
         ident = request.args["id"]
-        msg = "Hi " + str(name) + " ID : " + str(ident)
+        msg = "HelpMo " + str(name) + " ID : " + str(ident)
     except:
         return jsonify({'message' : 'error'})
     print("No error")
