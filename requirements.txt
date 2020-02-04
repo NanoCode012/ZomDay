@@ -4,4 +4,5 @@ gunicorn==19.6.0
 post
 requests
 line-bot-sdk
+sqlalchemy
 flask-sqlalchemy

@@ -3,7 +3,7 @@
 ##from __future__ import absolute_import
 ###
 from flask import Flask, jsonify, render_template, request
-from flask_sqlacademy import SQLAcademy
+from flask_sqlalchemy import SQLAlchemy
 import json
 import numpy as np
 
@@ -12,20 +12,20 @@ import numpy as np
 #from pymongo import MongoClient
 #from flask_restful import Resource, Api, reqparse
 
-from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage, StickerSendMessage, AudioSendMessage
-)
-from linebot.models.template import *
-from linebot import (
-    LineBotApi, WebhookHandler
-)
+# from linebot.models import (
+#     MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage, StickerSendMessage, AudioSendMessage
+# )
+# from linebot.models.template import *
+# from linebot import (
+#     LineBotApi, WebhookHandler
+# )
 
 app = Flask(__name__)
-app.config("SQLALCHEMY_DATABASE_URI") = r"mysql://id10391787_acclog:7%4dx7SC%to$@localhost/id10391787_accountlogin"
-db = SQLAcademy(app)
+#app.config("SQLALCHEMY_DATABASE_URI") = r"mysql://id10391787_acclog:7%4dx7SC%to$@localhost/id10391787_accountlogin"
+#db = SQLAcademy(app)
 
-lineaccesstoken = 'tIusZcDlB46unf8x8Lr2WkL197uMfnW7UJ85O021hxTVJ1p8/IRzGUDrew7vS7H4589SiLf6wlALp+JMm93AGUv6X0D739fynRQoPMtcFSie+MlcWOgexoVuhuhglLwgVxl/um3ewL3vlaXKPQQDYQdB04t89/1O/w1cDnyilFU='
-line_bot_api = LineBotApi(lineaccesstoken)
+# lineaccesstoken = 'tIusZcDlB46unf8x8Lr2WkL197uMfnW7UJ85O021hxTVJ1p8/IRzGUDrew7vS7H4589SiLf6wlALp+JMm93AGUv6X0D739fynRQoPMtcFSie+MlcWOgexoVuhuhglLwgVxl/um3ewL3vlaXKPQQDYQdB04t89/1O/w1cDnyilFU='
+# line_bot_api = LineBotApi(lineaccesstoken)
 
 ####################### new ########################
 @app.route('/')
@@ -33,10 +33,13 @@ def index():
     return "Hello World!"
 
 
-@app.route('/callback', methods=['GET'])
+@app.route('/callback', methods=['GET', "POST"])
 def callback():
-    json_line = request.get_json(force=False,cache=False)
-    return json_line
+    try:
+        json_line = request.args["name"]
+    except:
+        return "Error!"
+    return "Hi " + json_line, 200
 
     # json_line = json.dumps(json_line)
     # decoded = json.loads(json_line)
