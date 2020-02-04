@@ -7,3 +7,4 @@ line-bot-sdk
 sqlalchemy
 flask-sqlalchemy
 numpy
+sqlite3

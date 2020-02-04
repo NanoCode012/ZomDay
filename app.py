@@ -38,10 +38,11 @@ def callback():
     try:
         name = request.args["name"]
         ident = request.args["id"]
+        msg = "Hi " + name + " ID : " + ident
     except:
         return jsonify({'message' : 'error'})
     print("No error")
-    return jsonify({'message' : "Hi " + name + " ID : " + ident })
+    return jsonify({'message' : msg })
 
     # json_line = json.dumps(json_line)
     # decoded = json.loads(json_line)
