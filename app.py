@@ -36,9 +36,9 @@ def index():
 @app.route('/callback', methods=['GET'])
 def callback():
     try:
-        name = request.args["name"]
-        ident = request.args["id"]
-        msg = "HelpMo " + str(name) + " ID : " + str(ident)
+        name = request.args["username"]
+        # ident = request.args["id"]
+        msg = "HelpMo " + str(name)# + " ID : " + str(ident)
     except:
         return jsonify({'message' : 'error'})
     print("No error")
