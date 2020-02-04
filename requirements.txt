@@ -6,3 +6,4 @@ requests
 line-bot-sdk
 sqlalchemy
 flask-sqlalchemy
+numpy
