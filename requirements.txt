@@ -7,5 +7,3 @@ line-bot-sdk
 sqlalchemy
 flask-sqlalchemy
 numpy
-pandas
-gspread
