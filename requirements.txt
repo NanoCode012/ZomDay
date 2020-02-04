@@ -3,8 +3,5 @@ get
 gunicorn==19.6.0
 post
 requests
-wikipedia
 line-bot-sdk
-pandas==0.20.3
-googletrans
 flask-sqlalchemy

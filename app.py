@@ -33,7 +33,7 @@ def index():
     return "Hello World!"
 
 
-@app.route('/callback', methods=['POST'])
+@app.route('/callback', methods=['GET'])
 def callback():
     json_line = request.get_json(force=False,cache=False)
     return json_line
