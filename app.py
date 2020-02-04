@@ -30,7 +30,7 @@ app = Flask(__name__)
 ####################### new ########################
 @app.route('/', methods=['GET'])
 def index():
-    return jsonify({"message" : "Hello World"})
+    return jsonify({'message' : 'hello world'})
 
 
 @app.route('/callback', methods=['GET', "POST"])
@@ -38,9 +38,9 @@ def callback():
     try:
         json_line = request.args["name"]
     except:
-        jsonify({"message" : "Error"})
+        return jsonify({'message' : 'error'})
     print("No error")
-    return jsonify({"message" : "Hi " + json_line})
+    return jsonify({'message' : json_line })
 
     # json_line = json.dumps(json_line)
     # decoded = json.loads(json_line)
