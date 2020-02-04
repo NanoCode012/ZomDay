@@ -36,11 +36,12 @@ def index():
 @app.route('/callback', methods=['GET'])
 def callback():
     try:
-        json_line = request.args["name"]
+        name = request.args["name"]
+        ident = request.args["id"]
     except:
         return jsonify({'message' : 'error'})
     print("No error")
-    return jsonify({'message' : "Hi " + json_line })
+    return jsonify({'message' : "Hi " + name + " ID : " + ident })
 
     # json_line = json.dumps(json_line)
     # decoded = json.loads(json_line)
