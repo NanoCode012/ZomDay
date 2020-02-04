@@ -39,7 +39,7 @@ def callback():
         json_line = request.args["name"]
     except:
         return "Error!"
-    return "Hi " + json_line, 200
+    return "Hi " + json_line
 
     # json_line = json.dumps(json_line)
     # decoded = json.loads(json_line)
