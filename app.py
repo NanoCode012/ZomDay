@@ -33,7 +33,7 @@ def index():
     return jsonify({'message' : 'hello world'})
 
 
-@app.route('/callback', methods=['GET', "POST"])
+@app.route('/callback', methods=['GET'])
 def callback():
     try:
         json_line = request.args["name"]
