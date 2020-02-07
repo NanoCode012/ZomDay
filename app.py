@@ -28,9 +28,9 @@ app = Flask(__name__)
 # line_bot_api = LineBotApi(lineaccesstoken)
 
 ####################### new ########################
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():
-    return jsonify({'message' : 'hello world, good to know you'})
+    return jsonify({'message' : 'hello world, good to know you'}),200
 
 
 @app.route('/callback', methods=['GET'])
