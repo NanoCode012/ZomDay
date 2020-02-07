@@ -30,7 +30,7 @@ app = Flask(__name__)
 ####################### new ########################
 @app.route('/', methods=['GET'])
 def index():
-    return jsonify({'message' : 'hello world'})
+    return jsonify({'message' : 'hello world, good to know you'})
 
 
 @app.route('/callback', methods=['GET'])
