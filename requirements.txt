@@ -6,3 +6,4 @@ post
 # sqlalchemy
 # flask-sqlalchemy
 numpy
+flask-mysqldb
