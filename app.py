@@ -39,9 +39,9 @@ def start():
     except:
         return jsonify({"message" : "Sorry, invalid name"})
     finally:
-        game_start = true
+        game_start = True
         current_level = 0
-    return jsonify({"message" : "You are at home. You have food for only 2 days. You have two choice. 'Stay' inside or 'Look' outside?",
+    return jsonify({"message" : name + ", you are at home. You have food for only 2 days. You have two choice. 'Stay' inside or 'Look' outside?",
                     "option1" : "Stay",
                     "option2" : "Look"
                     })
