@@ -90,6 +90,8 @@ def play():
         res = cntrl.get_player_data()[0]
         game_start = bool(res["game_start"])
         current_level = int(res["current_level"])
+        food = int(res["food"])
+        options = res["options"]
 
         if (game_start and current_level >= 0):
             action = request.args["action"].strip()
@@ -147,7 +149,7 @@ def play():
         options = ["Exit", ""]
         cntrl.update_player_data(current_level, food, options)
         return jsonify({"message" : "Sorry, invalid action"})
-        
+
     return jsonify({"message":"unexpected state"})
 
 @app.route("/reset", methods=["GET"])
@@ -159,8 +161,8 @@ def reset():
 def options():
     try:
         name = request.args["name"]
-        res = Controller(name).get_player_data()
-        options = res[0]["options"].split(",")
+        res = Controller(name).get_player_data()[0]
+        options = res["options"].split(",")
     except:
         return jsonify({'message' : 'error'})
     return jsonify({"option1" : options[0],
