@@ -39,7 +39,7 @@ class Controller():
                         `options` varchar(200) NOT NULL
                         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;''')
     def add_player(self):
-        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `game_start`, `current_level`, `food`, `options`) VALUES (NULL, "''' + self.player_name + '''", '0', '0', '2', 'Stay,Look')''')
+        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `game_start`, `current_level`, `food`, `options`) VALUES (NULL, "''' + self.player_name + '''", '0', '0', '2', 'Stay,Look,Exit')''')
         mysql.connection.commit()
     def delete_player(self):
         self.cur.execute('''DELETE FROM `tbl_players` WHERE `name` = "''' + self.player_name + '''"''')
@@ -104,7 +104,7 @@ def play():
                     food += 1
                     msg = "You found food! You have " + str(food) + " food left. Do you want to 'Stay' inside or 'Look' outside?"
                 elif (action == "Exit"):
-                    options = ["Exit", ""]
+                    options = ["Exit", "", ""]
                     msg =  "Game over"
                 else:
                     raise Exception("Unexpected State")
@@ -112,14 +112,14 @@ def play():
                 if (action == "Stay"):
                     current_level = 3
                     food -= 1
-                    options = ["Exit", ""]
+                    options = ["Exit", "", ""]
                     msg =  "Hurray! The government stopped the crisis! You won"
                 elif (action == "Look"):
                     current_level = 4
-                    options = ["Exit", ""]
+                    options = ["Exit", "", ""]
                     msg = "You died!"
                 elif (action == "Exit"):
-                    options = ["Exit", ""]
+                    options = ["Exit", "", ""]
                     msg = "Game over"
                 else:
                     raise Exception("Unexpected State")
@@ -127,14 +127,14 @@ def play():
                 if (action == "Stay"):
                     current_level = 3
                     food -= 1
-                    options = ["Exit", ""]
+                    options = ["Exit", "", ""]
                     msg = "Hurray! The government stopped the crisis! You won"
                 elif (action == "Look"):
                     current_level = 4
-                    options = ["Exit", ""]
+                    options = ["Exit", "", ""]
                     msg = "You died!"
                 elif (action == "Exit"):
-                    options = ["Exit", ""]
+                    options = ["Exit", "", ""]
                     msg = "Game over"
                 else:
                     raise Exception("Unexpected State")
@@ -145,7 +145,7 @@ def play():
         else:
             return jsonify({"message":"game not started"})
     except:
-        options = ["Exit", ""]
+        options = ["Exit", "", ""]
         cntrl.update_player_data(current_level, food, options)
         return jsonify({"message" : "Sorry, invalid action"})
 
