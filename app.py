@@ -165,7 +165,9 @@ def options():
     except:
         return jsonify({'message' : 'error'})
     return jsonify({"option1" : options[0],
-                    "option2" : options[1]})
+                    "option2" : options[1],
+                    "option3" : options[2]
+                    })
 
 @app.route("/delete", methods=["GET"])
 def delete():
