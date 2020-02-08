@@ -1,9 +1,9 @@
 Flask==1.1.1
 get
 gunicorn==19.6.0
-post
+#post
 # requests
 # sqlalchemy
 # flask-sqlalchemy
-numpy
+#numpy
 flask-mysqldb
