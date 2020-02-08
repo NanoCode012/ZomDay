@@ -1,66 +1,125 @@
 #!/usr/bin/python
 #-*-coding: utf-8 -*-
-##from __future__ import absolute_import
-###
 from flask import Flask, jsonify, request
 # from flask_sqlalchemy import SQLAlchemy
 import json
 # import numpy as np
 
 
-#import pymongo
-#from pymongo import MongoClient
-#from flask_restful import Resource, Api, reqparse
-
-# from linebot.models import (
-#     MessageEvent, TextMessage, TextSendMessage,TemplateSendMessage,ImageSendMessage, StickerSendMessage, AudioSendMessage
-# )
-# from linebot.models.template import *
-# from linebot import (
-#     LineBotApi, WebhookHandler
-# )
-
 app = Flask(__name__)
 #app.config("SQLALCHEMY_DATABASE_URI") = r"mysql://id10391787_acclog:7%4dx7SC%to$@localhost/id10391787_accountlogin"
 #db = SQLAcademy(app)
 
-# lineaccesstoken = 'tIusZcDlB46unf8x8Lr2WkL197uMfnW7UJ85O021hxTVJ1p8/IRzGUDrew7vS7H4589SiLf6wlALp+JMm93AGUv6X0D739fynRQoPMtcFSie+MlcWOgexoVuhuhglLwgVxl/um3ewL3vlaXKPQQDYQdB04t89/1O/w1cDnyilFU='
-# line_bot_api = LineBotApi(lineaccesstoken)
-
 ####################### new ########################
+
+#default global variables
+name = ""
+game_start = False
+current_level - -1
+food = -1
+
+
 @app.route('/')
 def index():
     return jsonify({'message' : 'hello world, good to know you'})
-
 
 @app.route('/callback', methods=['GET'])
 def callback():
     try:
         name = request.args["username"]
-        # ident = request.args["id"]
-        msg = "HelpMo " + str(name)# + " ID : " + str(ident)
     except:
         return jsonify({'message' : 'error'})
     print("No error")
     return jsonify({'message' : msg })
 
-    # json_line = json.dumps(json_line)
-    # decoded = json.loads(json_line)
+@app.route("/start", methods=["GET"])
+def start():
+    try:
+        name = request.args["name"].strip()
+    except:
+        return jsonify({"message" : "Sorry, invalid name"})
+    finally:
+        game_start = true
+        current_level = 0
+    return jsonify({"message" : "You are at home. You have food for only 2 days. You have two choice. 'Stay' inside or 'Look' outside?",
+                    "option1" : "Stay",
+                    "option2" : "Look"
+                    })
 
+@app.route("/play", methods=["GET"])
+def play():
+    try:
+        if (game_start == True and current_level >= 0):
+            action = request.args["action"].strip()
+            if (current_level == 0):
+                if (action == "Stay"):
+                    current_level = 1
+                    food -= 1
+                    return jsonify({"message" : "You have " + food + " food left. Do you want to 'Stay' inside or 'Look' outside?",
+                                    "option1" : "Stay",
+                                    "option2" : "Look"
+                                    })
+                elif (action == "Look"):
+                    current_level = 2
+                    food += 1
+                    return jsonify({"message" : "You found food! You have " + food + " food left. Do you want to 'Stay' inside or 'Look' outside?",
+                                    "option1" : "Stay",
+                                    "option2" : "Look"
+                                    })
+                elif (action == "Exit"):
+                    return jsonify({"message" : "Game over"})
+                else:
+                    return Exception()
+            elif (current_level == 1):
+                if (action == "Stay"):
+                    current_level = 3
+                    food -= 1
+                    return jsonify({"message" : "Hurray! The government stopped the crisis! You won",
+                                    "option1" : "Exit",
+                                    "option2" : "Exit"
+                                    })
+                elif (action == "Look"):
+                    current_level = 4
+                    return jsonify({"message" : "You died!",
+                                    "option1" : "Exit",
+                                    "option2" : "Exit"
+                                    })
+                elif (action == "Exit"):
+                    return jsonify({"message" : "Game over"})
+                else:
+                    return Exception()
+            elif (current_level == 2):
+                if (action == "Stay"):
+                    current_level = 3
+                    food -= 1
+                    return jsonify({"message" : "Hurray! The government stopped the crisis! You won",
+                                    "option1" : "Exit",
+                                    "option2" : "Exit"
+                                    })
+                elif (action == "Look"):
+                    current_level = 4
+                    return jsonify({"message" : "You died!",
+                                    "option1" : "Exit",
+                                    "option2" : "Exit"
+                                    })
+                elif (action == "Exit"):
+                    return jsonify({"message" : "Game over"})
+                else:
+                    return Exception()
+            else:
+                return Exception()
+    except:
+        return jsonify({"message" : "Sorry, invalid action"})
 
-    # no_event = len(decoded['events'])
-    # for i in range(no_event):
-    #     event = decoded['events'][i]
-    #     #try:
-    #     event_handle(event)
-    #     #except:
-    #     #    pass
-    # return '',200
+@app.route("/reset", methods=["GET"])
+def reset():
+    game_reset()
+    return jsonify({"message" : "Game reset"})
 
-
-# def event_handle(event):
-#     return ""
-
+def game_reset():
+    game_start = False
+    current_level = -1
+    food = 2
 
 if __name__ == '__main__':
     app.run(debug=True)
