@@ -39,7 +39,7 @@ class Controller():
                         `options` varchar(200) NOT NULL
                         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;''')
     def add_player(self):
-        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `game_start`, `current_level`, `food`, `options`) VALUES (NULL, "''' + self.player_name + '''", '0', '0', '2', 'Stay,Look,Exit')''')
+        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `game_start`, `current_level`, `food`, `options`) VALUES (NULL, "''' + self.player_name + '''", '1', '0', '2', 'Stay,Look,Exit')''')
         mysql.connection.commit()
     def delete_player(self):
         self.cur.execute('''DELETE FROM `tbl_players` WHERE `name` = "''' + self.player_name + '''"''')
