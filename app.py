@@ -2,10 +2,10 @@
 #-*-coding: utf-8 -*-
 ##from __future__ import absolute_import
 ###
-from flask import Flask, jsonify, render_template, request
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, jsonify, request
+# from flask_sqlalchemy import SQLAlchemy
 import json
-import numpy as np
+# import numpy as np
 
 
 #import pymongo
@@ -30,7 +30,7 @@ app = Flask(__name__)
 ####################### new ########################
 @app.route('/')
 def index():
-    return jsonify({'message' : 'hello world, good to know you'}),200
+    return jsonify({'message' : 'hello world, good to know you'})
 
 
 @app.route('/callback', methods=['GET'])
@@ -55,11 +55,11 @@ def callback():
     #     event_handle(event)
     #     #except:
     #     #    pass
-    return '',200
+    # return '',200
 
 
-def event_handle(event):
-    return ""
+# def event_handle(event):
+#     return ""
 
 
 if __name__ == '__main__':

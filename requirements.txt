@@ -2,8 +2,7 @@ Flask==1.1.1
 get
 gunicorn==19.6.0
 post
-requests
-line-bot-sdk
-sqlalchemy
-flask-sqlalchemy
+# requests
+# sqlalchemy
+# flask-sqlalchemy
 numpy
