@@ -99,11 +99,11 @@ def play():
                 if (action == "Stay"):
                     current_level = 1
                     food -= 1
-                    msg =  "You have " + food + " food left. Do you want to 'Stay' inside or 'Look' outside?"
+                    msg =  "You have " + str(food) + " food left. Do you want to 'Stay' inside or 'Look' outside?"
                 elif (action == "Look"):
                     current_level = 2
                     food += 1
-                    msg = "You found food! You have " + food + " food left. Do you want to 'Stay' inside or 'Look' outside?"
+                    msg = "You found food! You have " + str(food) + " food left. Do you want to 'Stay' inside or 'Look' outside?"
                 elif (action == "Exit"):
                     options = ["Exit", ""]
                     msg =  "Game over"
