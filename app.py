@@ -91,7 +91,7 @@ def play():
         game_start = bool(res["game_start"])
         current_level = int(res["current_level"])
         food = int(res["food"])
-        options = res["options"]
+        options = res["options"].split(",")
 
         if (game_start and current_level >= 0):
             action = request.args["action"].strip()
