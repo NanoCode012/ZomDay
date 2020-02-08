@@ -76,8 +76,7 @@ def start():
     except:
         return jsonify({"message" : "Sorry, invalid name"})
     finally:
-        cntrl = Controller(name)
-        cntrl.add_player()
+        Controller(name).add_player()
 
     return jsonify({"message" : name + ", you are at home. You have food for only 2 days. You have two choice. 'Stay' inside or 'Look' outside?"})
 
@@ -151,10 +150,10 @@ def play():
 
     return jsonify({"message":"unexpected state"})
 
-@app.route("/reset", methods=["GET"])
-def reset():
-    game_reset()
-    return jsonify({"message" : "Game reset"})
+# @app.route("/reset", methods=["GET"])
+# def reset():
+#     game_reset()
+#     return jsonify({"message" : "Game reset"})
 
 @app.route("/options", methods=["GET"])
 def options():
@@ -169,29 +168,29 @@ def options():
                     "option3" : options[2]
                     })
 
-@app.route("/delete", methods=["GET"])
-def delete():
-    try:
-        name = request.args["name"]
-        Controller(name).delete_player()
-    except:
-        return jsonify({'message' : 'error'})
-    return jsonify({"message" : "success"})
+# @app.route("/delete", methods=["GET"])
+# def delete():
+#     try:
+#         name = request.args["name"]
+#         Controller(name).delete_player()
+#     except:
+#         return jsonify({'message' : 'error'})
+#     return jsonify({"message" : "success"})
 
-@app.route("/playerdata", methods=["GET"])
-def playerdata():
-    try:
-        name = request.args["name"]
-        msg = Controller(name).get_player_data()
-    except:
-        return jsonify({'message' : 'error'})
-    return jsonify({"message" : msg})
+# @app.route("/playerdata", methods=["GET"])
+# def playerdata():
+#     try:
+#         name = request.args["name"]
+#         msg = Controller(name).get_player_data()
+#     except:
+#         return jsonify({'message' : 'error'})
+#     return jsonify({"message" : msg})
 
-def game_reset():
-    game_start = False
-    current_level = -1
-    food = 2
-    options = ["", ""]
+# def game_reset():
+#     game_start = False
+#     current_level = -1
+#     food = 2
+#     options = ["", ""]
 
 if __name__ == '__main__':
     app.run(debug=True)
