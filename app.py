@@ -15,7 +15,7 @@ app = Flask(__name__)
 #default global variables
 name = ""
 game_start = False
-current_level - -1
+current_level = -1
 food = -1
 
 
