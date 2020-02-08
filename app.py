@@ -39,7 +39,7 @@ class Controller():
                         `options` varchar(200) NOT NULL
                         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;''')
     def add_player(self):
-        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `game_start`, `current_level`, `food`, `options`) VALUES (NULL, "''' + self.player_name + '''", '0', '0', '2', 'Stay, Look')''')
+        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `game_start`, `current_level`, `food`, `options`) VALUES (NULL, "''' + self.player_name + '''", '0', '0', '2', 'Stay,Look')''')
         mysql.connection.commit()
     def delete_player(self):
         self.cur.execute('''DELETE FROM `tbl_players` WHERE `name` = "''' + self.player_name + '''"''')
@@ -78,7 +78,6 @@ def start():
     finally:
         cntrl = Controller(name)
         cntrl.add_player()
-        cntrl.update_player_data(0, 2, "Stay,Look")
 
     return jsonify({"message" : name + ", you are at home. You have food for only 2 days. You have two choice. 'Stay' inside or 'Look' outside?"})
 
