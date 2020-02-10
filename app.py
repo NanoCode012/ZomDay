@@ -134,7 +134,7 @@ def status():
         cntrl = Controller(name)
 
         from app_event import convert_status_to_dict
-        status = convert_status_to_dict(cntrl.get_player_data()["status"])
+        status = convert_status_to_dict(cntrl.get_player_data()["status"].split(","))
 
         msg = "Player\\nHP:"+status["hp"]+"\\n"+"Energy:"+status["Energy"]+"\\nThirst:"+status["Thirst"]
         return jsonify({"message": msg})
