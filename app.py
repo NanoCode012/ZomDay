@@ -130,7 +130,7 @@ def status():
 
         status = cntrl.get_player_data()["status"]
 
-        msg = "Player"
+        msg = "Player\\nHP:"+status["hp"]+"\\n"+"Energy:"+status["Energy"]+"\\nThirst:"+status["Thirst"]
         return msg
     except:
         return jsonify({"message" : "Sorry, please try again"})
@@ -150,7 +150,34 @@ def options():
         return jsonify({'message' : 'error'})
     return jsonify({"option1" : options[0],
                     "option2" : options[1],
-                    "option3" : options[2]
+                    "option3" : options[2],
+                    "option4" : options[3]
+                    })
+
+@app.route("/options0", methods=["GET"])
+def options0():
+    try:
+        name = request.args["name"]
+        res = Controller(name).get_player_data()
+        options = res["options"].split(",")
+    except:
+        return jsonify({'message' : 'error'})
+    return jsonify({"option1" : options[4],
+                    "option2" : options[5],
+                    "option3" : options[6]
+                    })
+
+@app.route("/options1", methods=["GET"])
+def options1():
+    try:
+        name = request.args["name"]
+        res = Controller(name).get_player_data()
+        options = res["options"].split(",")
+    except:
+        return jsonify({'message' : 'error'})
+    return jsonify({"option1" : options[7],
+                    "option2" : options[8],
+                    "option3" : options[9]
                     })
 
 @app.route("/itemlist", methods=["GET"])

@@ -48,6 +48,7 @@ def event_handler(action, cntrl):
                     msg = "Neighbour: Hi"
                     status["energy"] = min(status["energy"]-energy_needed, 0)
                     cntrl.update_player_status(convert_dict_to_status_db(status))
+                    cntrl.update_player_news("Static: You talked to someone!")
                 else:
                     msg = "Not enough energy"
             elif (action == "Look for food"):
