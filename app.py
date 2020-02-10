@@ -82,14 +82,9 @@ def play():
         name = request.args["name"].strip()
         cntrl = Controller(name)
         res = cntrl.get_player_data()[0]
-
-        game_start = bool(res["game_start"])
-        current_level = int(res["current_level"])
-        food = int(res["food"])
-        options = res["options"].split(",")
         action = request.args["action"].strip()
 
-        return event_handler(game_start, current_level, food, options, action, cntrl)
+        return event_handler(res, action, cntrl)
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
@@ -112,6 +107,10 @@ def options():
                     "option2" : options[1],
                     "option3" : options[2]
                     })
+
+@app.route("/ret", methods=["GET"])
+def ret():
+  return jsonify({"message":"1"})
 
 # @app.route("/delete", methods=["GET"])
 # def delete():
