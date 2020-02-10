@@ -237,7 +237,7 @@ def playerdata():
         msg = Controller(name).get_player_data()
     except:
         return jsonify({'message' : 'error'})
-    return jsonify({"message" : msg})
+    return jsonify(msg)
 
 @app.route("/fxmessage", methods=["GET"])
 def fxmessagehandler():

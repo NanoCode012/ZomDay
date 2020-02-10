@@ -17,14 +17,7 @@ def event_handler(action, cntrl):
                 msg = "Showing possible actions"
             elif (action == "Next Day"):
                 msg = "Next day.."
-                day += 1
-                cntrl.update_player_day(day)
-
-                status["hp"] = max(status["hp"]-10, 0)
-                status["thirst"] = max(status["thirst"]-10, 0)
-                status["energy"] = min(status["energy"]+10, 100)
-                cntrl.update_player_status(convert_dict_to_status_db(status))
-
+                next_day(cntrl, day, status)
 
             elif (action == "Exit"):
                 msg = "Game over"
@@ -56,6 +49,7 @@ def event_handler(action, cntrl):
                     cntrl.update_player_news("Static: You talked to someone!")
                 else:
                     msg = "Not enough energy"
+                next_day(cntrl, day, status)    
             elif (action == "Look for food"):
                 from random import randint
                 
@@ -69,12 +63,22 @@ def event_handler(action, cntrl):
                     cntrl.update_player_options(config_options_for_db(["EXIT"]))
                 else:
                     msg = "You found nothing"
+                next_day(cntrl, day, status) 
         else:
             return jsonify({"message" : "invalid action"})
         
         return jsonify({"message" : msg})
     else:
         return jsonify({"message":"game not started"})
+
+def next_day(cntrl, day, status):
+    day += 1
+    cntrl.update_player_day(day)
+
+    status["hp"] = max(status["hp"]-10, 0)
+    status["thirst"] = max(status["thirst"]-10, 0)
+    status["energy"] = min(status["energy"]+10, 100)
+    cntrl.update_player_status(convert_dict_to_status_db(status))
 
 def convert_resources_to_dict(res):
     from app import get_items
