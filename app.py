@@ -96,7 +96,7 @@ def start():
     except:
         return jsonify({"message" : "Sorry, invalid name"})
 
-    return jsonify({"message" : name + ", you are at home. You have food for only 2 days. You have two choice. 'Stay' inside or 'Look' outside?"})
+    return jsonify({"message" : name + ", you are at home. Apocalypse happened. You must survive!"})
 
 @app.route("/play", methods=["GET"])
 def play():
@@ -130,7 +130,8 @@ def status():
 
         cntrl = Controller(name)
 
-        status = cntrl.get_player_data()["status"]
+        from app_event import convert_status_to_dict
+        status = convert_status_to_dict(cntrl.get_player_data()["status"])
 
         msg = "Player\\nHP:"+status["hp"]+"\\n"+"Energy:"+status["Energy"]+"\\nThirst:"+status["Thirst"]
         return jsonify({"message": msg})
