@@ -121,14 +121,14 @@ def news():
         news = res["news"]
         cntrl.update_player_news("", True)
         
-        news = "It's Day " + res["day"] + ".\\n"
+        news = "It's Day " + str(res["day"]) + ".\\n"
         return jsonify({"message":news})
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/status", methods=["GET"])
 def status():
-    try:
+    # try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
@@ -136,10 +136,10 @@ def status():
         from app_event import convert_status_to_dict
         status = convert_status_to_dict(cntrl.get_player_data()["status"].split(","))
 
-        msg = "Player\\nHP:"+status["hp"]+"\\n"+"Energy:"+status["Energy"]+"\\nThirst:"+status["Thirst"]
+        msg = "Player Status\\nHP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
         return jsonify({"message": msg})
-    except:
-        return jsonify({"message" : "Sorry, please try again"})
+    # except:
+    #     return jsonify({"message" : "Sorry, please try again"})
 
 # @app.route("/reset", methods=["GET"])
 # def reset():
@@ -241,6 +241,9 @@ def fxmessagehandler():
 
 def get_items():
     return ["food", "water", "weapon1", "weapon2", "comm device", "surv tool 1", "surv tool 2", "surv tool 3", "surv tool 4", "surv tool 5"]
+
+def get_status():
+    return ["hp", "energy", "thirst"]
 
 if __name__ == '__main__':
     app.run(debug=True)
