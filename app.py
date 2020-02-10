@@ -128,7 +128,7 @@ def news():
 
 @app.route("/status", methods=["GET"])
 def status():
-    # try:
+    try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
@@ -138,8 +138,8 @@ def status():
 
         msg = "Player Status\\nHP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
         return jsonify({"message": msg})
-    # except:
-    #     return jsonify({"message" : "Sorry, please try again"})
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
 
 # @app.route("/reset", methods=["GET"])
 # def reset():
