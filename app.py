@@ -188,6 +188,25 @@ def itemlist():
         di["item" + str(i+1)] = items[i]
     return jsonify(di)
 
+@app.route("/takeitem", methods=["GET"])
+def takeitem():
+    try:
+        name = request.args["name"]
+        item = request.args["item"]
+        cntrl = Controller(name)
+        res = cntrl.get_player_data()
+        from app_event import convert_dict_to_resources_db, convert_resources_to_dict
+
+        resources = convert_resources_to_dict(res["resources"].split(","))
+        if (item in resources):
+            resources[item] += 1
+            cntrl.update_player_resources(convert_dict_to_resources_db(resources))
+            return jsonify("message":"picked up item")
+        else:
+            raise Exception("Wrong item")
+    except:
+        return jsonify({'message' : 'error'})
+
 @app.route("/ret", methods=["GET"])
 def ret():
     return jsonify({"message":"1\\n1"})
