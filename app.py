@@ -133,7 +133,7 @@ def status():
         status = cntrl.get_player_data()["status"]
 
         msg = "Player\\nHP:"+status["hp"]+"\\n"+"Energy:"+status["Energy"]+"\\nThirst:"+status["Thirst"]
-        return msg
+        return jsonify({"message": msg})
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
