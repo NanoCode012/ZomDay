@@ -63,7 +63,9 @@ class Controller():
     def update_player_news(self, news, clear=False):
         if (not clear):
             res = self.get_player_data()
-            news = res["news"] + "," + news
+            if (res["news"] != ""):
+                news = res["news"] + "\\n" + news
+                
 
         self.cur.execute('''UPDATE `tbl_players` SET `news`="''' + news + 
                         '''" WHERE `name` = "''' + self.player_name + '''"''')
@@ -117,7 +119,7 @@ def news():
 
         news = cntrl.get_player_data()["news"]
         cntrl.update_player_news("", True)
-        return news
+        return jsonify({"message":news})
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
