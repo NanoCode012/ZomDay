@@ -117,8 +117,11 @@ def news():
 
         cntrl = Controller(name)
 
-        news = cntrl.get_player_data()["news"]
+        res = cntrl.get_player_data()
+        news = res["news"]
         cntrl.update_player_news("", True)
+        
+        news = "It's Day " + res["day"] + ".\\n"
         return jsonify({"message":news})
     except:
         return jsonify({"message" : "Sorry, please try again"})
