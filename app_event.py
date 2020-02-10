@@ -20,9 +20,9 @@ def event_handler(action, cntrl):
                 day += 1
                 cntrl.update_player_day(day)
 
-                status["hp"] = min(status["hp"]-10, 0)
-                status["thirst"] = min(status["thirst"]-10, 0)
-                status["energy"] = max(status["energy"]+10, 100)
+                status["hp"] = max(status["hp"]-10, 0)
+                status["thirst"] = max(status["thirst"]-10, 0)
+                status["energy"] = min(status["energy"]+10, 100)
                 cntrl.update_player_status(convert_dict_to_status_db(status))
 
 
@@ -32,7 +32,7 @@ def event_handler(action, cntrl):
                 if (resources["food"] > 0):
                     msg = "Eating.."
                     resources["food"] -= 1
-                    status["hp"] = max(status["hp"]+20, 100)
+                    status["hp"] = min(status["hp"]+20, 100)
                     cntrl.update_player_status(convert_dict_to_status_db(status))
                 else:
                     msg = "Not enough food"
@@ -40,7 +40,7 @@ def event_handler(action, cntrl):
                 if (resources["water"] > 0):
                     msg = "Drinking.."
                     resources["water"] -= 1
-                    status["thirst"] = max(status["thirst"]+20, 100)
+                    status["thirst"] = min(status["thirst"]+20, 100)
                     cntrl.update_player_resources(convert_dict_to_resources_db(resources))
                     cntrl.update_player_status(convert_dict_to_status_db(status))
                 else:
@@ -51,7 +51,7 @@ def event_handler(action, cntrl):
                 energy_needed = 10
                 if (status["energy"] >= energy_needed):
                     msg = "Neighbour: Hi"
-                    status["energy"] = min(status["energy"]-energy_needed, 0)
+                    status["energy"] = max(status["energy"]-energy_needed, 0)
                     cntrl.update_player_status(convert_dict_to_status_db(status))
                     cntrl.update_player_news("Static: You talked to someone!")
                 else:
