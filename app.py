@@ -60,6 +60,10 @@ class Controller():
         self.cur.execute('''UPDATE `tbl_players` SET `status`="''' + status + 
                         '''" WHERE `name` = "''' + self.player_name + '''"''')
         mysql.connection.commit()
+    def update_player_day(self, day):
+        self.cur.execute('''UPDATE `tbl_players` SET `day`=''' + day + 
+                        ''' WHERE `name` = "''' + self.player_name + '''"''')
+        mysql.connection.commit()
     def update_player_news(self, news, clear=False):
         if (not clear):
             res = self.get_player_data()

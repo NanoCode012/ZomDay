@@ -17,10 +17,15 @@ def event_handler(action, cntrl):
                 msg = "Showing possible actions"
             elif (action == "Next Day"):
                 msg = "Next day.."
+                day += 1
+                cntrl.update_player_day(day)
+
                 status["hp"] = min(status["hp"]-10, 0)
                 status["thirst"] = min(status["thirst"]-10, 0)
                 status["energy"] = max(status["energy"]+10, 100)
                 cntrl.update_player_status(convert_dict_to_status_db(status))
+
+
             elif (action == "Exit"):
                 msg = "Game over"
             elif (action == "Eat"):
