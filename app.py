@@ -65,7 +65,7 @@ class Controller():
             res = self.get_player_data()
             if (res["news"] != ""):
                 news = res["news"] + "\\n" + news
-                
+
 
         self.cur.execute('''UPDATE `tbl_players` SET `news`="''' + news + 
                         '''" WHERE `name` = "''' + self.player_name + '''"''')
@@ -203,7 +203,7 @@ def takeitem():
         if (item in resources):
             resources[item] += 1
             cntrl.update_player_resources(convert_dict_to_resources_db(resources))
-            return jsonify("message":"picked up item")
+            return jsonify({"message":"picked up item"})
         else:
             raise Exception("Wrong item")
     except:
