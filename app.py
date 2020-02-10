@@ -6,6 +6,9 @@ from flask_mysqldb import MySQL
 import json
 # import numpy as np
 
+from app_flex import fxmessage
+from app_event import event_handler
+
 app = Flask(__name__)
 
 app.config["MYSQL_USER"] = "sql12321899"
@@ -16,13 +19,6 @@ app.config["MYSQL_CURSORCLASS"]  = "DictCursor"
 mysql = MySQL(app)
 
 ####################### new ########################
-
-#default global variables
-# name = ""
-# game_start = False
-# current_level = -1
-# food = -1
-# options = ["", ""]
 
 class Controller():
     def __init__(self, player_name):
@@ -86,67 +82,16 @@ def play():
         name = request.args["name"].strip()
         cntrl = Controller(name)
         res = cntrl.get_player_data()[0]
+
         game_start = bool(res["game_start"])
         current_level = int(res["current_level"])
         food = int(res["food"])
         options = res["options"].split(",")
+        action = request.args["action"].strip()
 
-        if (game_start and current_level >= 0):
-            action = request.args["action"].strip()
-            if (current_level == 0):
-                if (action == "Stay"):
-                    current_level = 1
-                    food -= 1
-                    msg =  "You have " + str(food) + " food left. Do you want to 'Stay' inside or 'Look' outside?"
-                elif (action == "Look"):
-                    current_level = 2
-                    food += 1
-                    msg = "You found food! You have " + str(food) + " food left. Do you want to 'Stay' inside or 'Look' outside?"
-                elif (action == "Exit"):
-                    options = ["Exit", "", ""]
-                    msg =  "Game over"
-                else:
-                    raise Exception("Unexpected State")
-            elif (current_level == 1):
-                if (action == "Stay"):
-                    current_level = 3
-                    food -= 1
-                    options = ["Exit", "", ""]
-                    msg =  "Hurray! The government stopped the crisis! You won"
-                elif (action == "Look"):
-                    current_level = 4
-                    options = ["Exit", "", ""]
-                    msg = "You died!"
-                elif (action == "Exit"):
-                    options = ["Exit", "", ""]
-                    msg = "Game over"
-                else:
-                    raise Exception("Unexpected State")
-            elif (current_level == 2):
-                if (action == "Stay"):
-                    current_level = 3
-                    food -= 1
-                    options = ["Exit", "", ""]
-                    msg = "Hurray! The government stopped the crisis! You won"
-                elif (action == "Look"):
-                    current_level = 4
-                    options = ["Exit", "", ""]
-                    msg = "You died!"
-                elif (action == "Exit"):
-                    options = ["Exit", "", ""]
-                    msg = "Game over"
-                else:
-                    raise Exception("Unexpected State")
-            else:
-                raise Exception("Unexpected State")
-            cntrl.update_player_data(current_level, food, ",".join(options))
-            return jsonify({"message" : msg})
-        else:
-            return jsonify({"message":"game not started"})
+        return event_handler(game_start, current_level, food, options, action, cntrl)
     except:
-        options = ["Exit", "", ""]
-        cntrl.update_player_data(current_level, food, options)
-        return jsonify({"message" : "Sorry, invalid action"})
+        return jsonify({"message" : "Sorry, please try again"})
 
     return jsonify({"message":"unexpected state"})
 
@@ -187,188 +132,8 @@ def options():
 #     return jsonify({"message" : msg})
 
 @app.route("/fxmessage", methods=["GET"])
-def fxmessage():
-    return jsonify({
-  "type": "flex",
-  "altText": "Flex Message",
-  "contents": {
-    "type": "carousel",
-    "contents": [
-      {
-        "type": "bubble",
-        "hero": {
-          "type": "image",
-          "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_5_carousel.png",
-          "size": "full",
-          "aspectRatio": "20:13",
-          "aspectMode": "cover"
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "spacing": "sm",
-          "contents": [
-            {
-              "type": "text",
-              "text": "Arm Chair, White",
-              "size": "xl",
-              "weight": "bold",
-              "wrap": True
-            },
-            {
-              "type": "box",
-              "layout": "baseline",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "$49",
-                  "flex": 0,
-                  "size": "xl",
-                  "weight": "bold",
-                  "wrap": True
-                },
-                {
-                  "type": "text",
-                  "text": ".99",
-                  "flex": 0,
-                  "size": "sm",
-                  "weight": "bold",
-                  "wrap": True
-                }
-              ]
-            }
-          ]
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "spacing": "sm",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "Add to Cart",
-                "uri": "https://linecorp.com"
-              },
-              "style": "primary"
-            },
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "Add to whishlist",
-                "uri": "https://linecorp.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "bubble",
-        "hero": {
-          "type": "image",
-          "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_6_carousel.png",
-          "size": "full",
-          "aspectRatio": "20:13",
-          "aspectMode": "cover"
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "spacing": "sm",
-          "contents": [
-            {
-              "type": "text",
-              "text": "Metal Desk Lamp",
-              "size": "xl",
-              "weight": "bold",
-              "wrap": True
-            },
-            {
-              "type": "box",
-              "layout": "baseline",
-              "flex": 1,
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "$11",
-                  "flex": 0,
-                  "size": "xl",
-                  "weight": "bold",
-                  "wrap": True
-                },
-                {
-                  "type": "text",
-                  "text": ".99",
-                  "flex": 0,
-                  "size": "sm",
-                  "weight": "bold",
-                  "wrap": True
-                }
-              ]
-            },
-            {
-              "type": "text",
-              "text": "Temporarily out of stock",
-              "flex": 0,
-              "margin": "md",
-              "size": "xxs",
-              "color": "#FF5551",
-              "wrap": True
-            }
-          ]
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "spacing": "sm",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "Add to Cart",
-                "uri": "https://linecorp.com"
-              },
-              "flex": 2,
-              "color": "#AAAAAA",
-              "style": "primary"
-            },
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "Add to wish list",
-                "uri": "https://linecorp.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "bubble",
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "spacing": "sm",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "See more",
-                "uri": "https://linecorp.com"
-              },
-              "flex": 1,
-              "gravity": "center"
-            }
-          ]
-        }
-      }
-    ]
-  }
-})
+def fxmessagehandler():
+    return fxmessage()
 
 # def game_reset():
 #     game_start = False
