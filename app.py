@@ -61,7 +61,7 @@ class Controller():
                         '''" WHERE `name` = "''' + self.player_name + '''"''')
         mysql.connection.commit()
     def update_player_day(self, day):
-        self.cur.execute('''UPDATE `tbl_players` SET `day`=''' + day + 
+        self.cur.execute('''UPDATE `tbl_players` SET `day`=''' + str(day) + 
                         ''' WHERE `name` = "''' + self.player_name + '''"''')
         mysql.connection.commit()
     def update_player_news(self, news, clear=False):
