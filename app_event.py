@@ -1,64 +1,103 @@
 from flask import jsonify
 
-def event_handler(res, action, cntrl):
-    game_start = bool(res["game_start"])
-    current_level = int(res["current_level"])
-    food = int(res["food"])
-    options = res["options"].split(",")
+def event_handler(action, cntrl):
+    #may have error when user enters this state without name check
+    res = cntrl.get_player_data()
 
-    if (game_start and current_level >= 0):
-        if (current_level == 0):
-            if (action == "Stay"):
-                current_level = 1
-                food -= 1
-                msg =  "You have " + str(food) + " food left. Do you want to 'Stay' inside or 'Look' outside?"
-            elif (action == "Look"):
-                current_level = 2
-                food += 1
-                msg = "You found food! You have " + str(food) + " food left. Do you want to 'Stay' inside or 'Look' outside?"
+    day = res["day"]
+    resources = convert_resources_to_dict(res["resources"].split(","))#see doc for order/item 
+    options = res["options"].split(",")
+    status = convert_status_to_dict(res["status"].split(","))
+
+    if (day > 0):
+        if (action in options):
+            if (action == "Check supplies"):
+                msg = "Opening supply box"
+            elif (action == "Act"):
+                msg = "Showing possible actions"
+            elif (action == "Next Day"):
+                msg = "Next day.."
+                status["hp"] = min(status["hp"]-10, 0)
+                status["thirst"] = min(status["thirst"]-10, 0)
+                status["energy"] = max(status["energy"]+10, 100)
+                cntrl.update_player_status(convert_dict_to_status_db(status))
             elif (action == "Exit"):
-                options = ["Exit"]
-                msg =  "Game over"
-            else:
-                raise Exception("Unexpected State")
-        elif (current_level == 1):
-            if (action == "Stay"):
-                current_level = 3
-                food -= 1
-                options = ["Exit"]
-                msg =  "Hurray! The government stopped the crisis! You won"
-            elif (action == "Look"):
-                current_level = 4
-                options = ["Exit"]
-                msg = "You died!"
-            elif (action == "Exit"):
-                options = ["Exit"]
                 msg = "Game over"
-            else:
-                raise Exception("Unexpected State")
-        elif (current_level == 2):
-            if (action == "Stay"):
-                current_level = 3
-                food -= 1
-                options = ["Exit"]
-                msg = "Hurray! The government stopped the crisis! You won"
-            elif (action == "Look"):
-                current_level = 4
-                options = ["Exit"]
-                msg = "You died!"
-            elif (action == "Exit"):
-                options = ["Exit"]
-                msg = "Game over"
-            else:
-                raise Exception("Unexpected State")
+            elif (action == "Eat"):
+                if (resources["food"] > 0):
+                    msg = "Eating.."
+                    resources["food"] -= 1
+                    status["hp"] = max(status["hp"]+20, 100)
+                    cntrl.update_player_status(convert_dict_to_status_db(status))
+                else:
+                    msg = "Not enough food"
+            elif (action == "Drink"):
+                if (resources["water"] > 0):
+                    msg = "Drinking.."
+                    resources["water"] -= 1
+                    status["thirst"] = max(status["thirst"]+20, 100)
+                    cntrl.update_player_resources(convert_dict_to_resources_db(resources))
+                    cntrl.update_player_status(convert_dict_to_status_db(status))
+                else:
+                    msg = "Not enough water"
+            elif (action == "Back"):
+                msg = "Back options"
+            elif (action == "Talk to neighbour"):
+                energy_needed = 10
+                if (status["energy"] >= energy_needed):
+                    msg = "Neighbour: Hi"
+                    status["energy"] = min(status["energy"]-energy_needed, 0)
+                    cntrl.update_player_status(convert_dict_to_status_db(status))
+                else:
+                    msg = "Not enough energy"
+            elif (action == "Look for food"):
+                from random import randint
+                
+                r = randint(0, 100)
+                if (0<= r < 30):
+                    msg = "Found food!"
+                elif (30 <= r < 60):
+                    msg = "You died!"
+                    status["hp"] = 0
+                    cntrl.update_player_status(convert_dict_to_status_db(status))
+                    cntrl.update_player_options(config_options_for_db(["EXIT"]))
+                else:
+                    msg = "You found nothing"
         else:
-            raise Exception("Unexpected State")
-        cntrl.update_player_data(current_level, food, config_options_for_db(options))
+            return jsonify({"message" : "invalid action"})
+        
         return jsonify({"message" : msg})
     else:
         return jsonify({"message":"game not started"})
 
-def pad_options(options, length=3):
+def convert_resources_to_dict(res):
+    from app import get_items
+
+    d = {}
+    items = get_items()
+    for i in range(len(items)):
+        d[items[i]] = int(res[i])
+    return d
+
+def convert_dict_to_resources_db(res):
+    from app import get_items
+    items = get_items()
+    s = str(res[items[0]])
+    for i in range(1, len(items)):
+        s += "," + str(res[items[i]])
+    return s
+
+def convert_status_to_dict(st):
+    d = {}
+    d["hp"] = int(st[0])
+    d["energy"] = int(st[1])
+    d["thirst"] = int(st[2])
+    return d
+
+def convert_dict_to_status_db(st):
+    return str(st["hp"]) + "," + str(st["energy"]) + "," + str(st["thirst"])
+
+def pad_options(options, length=10):
     if (len(options) == length): return options
     
     for i in range(len(options), length):

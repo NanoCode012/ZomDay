@@ -28,29 +28,50 @@ class Controller():
     def create_table():
         self.cur.execute('''CREATE TABLE `tbl_players` (
                         `id` int(11) NOT NULL AUTO_INCREMENT,
-                        `name` varchar(200) NOT NULL,
-                        `game_start` tinyint(1) NOT NULL,
-                        `current_level` int(11) NOT NULL,
-                        `food` int(11) NOT NULL,
-                        `options` varchar(200) NOT NULL
+                        `name` varchar(200) NOT NULL UNIQUE,
+                        `status` varchar(200) NOT NULL,
+                        `day` int(11) NOT NULL,
+                        `resources` varchar(200) NOT NULL,
+                        `options` varchar(200) NOT NULL,
+                        `news` varchar(200) NOT NULL,
+                        `events` varchar(200) NOT NULL
                         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;''')
     def add_player(self):
-        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `game_start`, `current_level`, `food`, `options`) VALUES (NULL, "''' + self.player_name + '''", '1', '0', '2', 'Stay,Look,Exit')''')
+        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `status`, `day`, `resources`, `options`, `news`, `events`) VALUES (NULL, "''' + self.player_name + '''", '100,100,100', 1,'3,3,0,0,0,0,0,0,0,0', 'Check supplies,Act,Next Day,Exit,Eat,Drink,Back,Talk to neighbour,Look for food,Back', '', '0,0')''')
         mysql.connection.commit()
     def delete_player(self):
         self.cur.execute('''DELETE FROM `tbl_players` WHERE `name` = "''' + self.player_name + '''"''')
         mysql.connection.commit()
     def get_player_data(self):
         self.cur.execute('''SELECT * FROM `tbl_players` WHERE `name` = "''' + self.player_name + '''"''')
-        return self.cur.fetchall()
-    def update_player_data(self, new_level, food, options, game_start = 1):
-        self.cur.execute('''UPDATE `tbl_players` SET `game_start`=''' + str(game_start) + 
-                        ''',`current_level`=''' + str(new_level) + 
-                        ''',`food`=''' + str(food) + 
-                        ''',`options`="''' + options + 
+        return self.cur.fetchall()[0]
+    # def update_player_data(self, status, day, resources, options):
+    #     self.cur.execute('''UPDATE `tbl_players` SET `game_start`=''' + str(game_start) + 
+    #                     ''',`current_level`=''' + str(new_level) + 
+    #                     ''',`resources`=''' + ",".join(resources) + 
+    #                     ''',`options`="''' + options + 
+    #                     '''" WHERE `name` = "''' + self.player_name + '''"''')
+        # mysql.connection.commit()
+    def update_player_resources(self, resources):
+        self.cur.execute('''UPDATE `tbl_players` SET `resources`="''' + resources + 
                         '''" WHERE `name` = "''' + self.player_name + '''"''')
         mysql.connection.commit()
+    def update_player_status(self, status):
+        self.cur.execute('''UPDATE `tbl_players` SET `status`="''' + status + 
+                        '''" WHERE `name` = "''' + self.player_name + '''"''')
+        mysql.connection.commit()
+    def update_player_news(self, news, clear=False):
+        if (not clear):
+            res = self.get_player_data()
+            news = res["news"] + "," + news
 
+        self.cur.execute('''UPDATE `tbl_players` SET `news`="''' + news + 
+                        '''" WHERE `name` = "''' + self.player_name + '''"''')
+        mysql.connection.commit()
+    def update_player_options(self, options):
+        self.cur.execute('''UPDATE `tbl_players` SET `options`="''' + options + 
+                        '''" WHERE `name` = "''' + self.player_name + '''"''')
+        mysql.connection.commit()
 
 @app.route('/')
 def index():
@@ -69,10 +90,9 @@ def callback():
 def start():
     try:
         name = request.args["name"].strip()
+        Controller(name).add_player()
     except:
         return jsonify({"message" : "Sorry, invalid name"})
-    finally:
-        Controller(name).add_player()
 
     return jsonify({"message" : name + ", you are at home. You have food for only 2 days. You have two choice. 'Stay' inside or 'Look' outside?"})
 
@@ -80,15 +100,40 @@ def start():
 def play():
     try:
         name = request.args["name"].strip()
-        cntrl = Controller(name)
-        res = cntrl.get_player_data()[0]
         action = request.args["action"].strip()
 
-        return event_handler(res, action, cntrl)
+        cntrl = Controller(name)
+
+        return event_handler(action, cntrl)
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
-    return jsonify({"message":"unexpected state"})
+@app.route("/news", methods=["GET"])
+def news():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+
+        news = cntrl.get_player_data()["news"]
+        cntrl.update_player_news("", True)
+        return news
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
+
+@app.route("/status", methods=["GET"])
+def status():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+
+        status = cntrl.get_player_data()["status"]
+
+        msg = "Player"
+        return msg
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
 
 # @app.route("/reset", methods=["GET"])
 # def reset():
@@ -99,7 +144,7 @@ def play():
 def options():
     try:
         name = request.args["name"]
-        res = Controller(name).get_player_data()[0]
+        res = Controller(name).get_player_data()
         options = res["options"].split(",")
     except:
         return jsonify({'message' : 'error'})
@@ -108,9 +153,17 @@ def options():
                     "option3" : options[2]
                     })
 
+@app.route("/itemlist", methods=["GET"])
+def itemlist():
+    items = get_items()
+    di = {}
+    for i in range(len(items)):
+        di["item" + str(i+1)] = items[i]
+    return jsonify(di)
+
 @app.route("/ret", methods=["GET"])
 def ret():
-  return jsonify({"message":"1"})
+    return jsonify({"message":"1\\n1"})
 
 # @app.route("/delete", methods=["GET"])
 # def delete():
@@ -121,25 +174,21 @@ def ret():
 #         return jsonify({'message' : 'error'})
 #     return jsonify({"message" : "success"})
 
-# @app.route("/playerdata", methods=["GET"])
-# def playerdata():
-#     try:
-#         name = request.args["name"]
-#         msg = Controller(name).get_player_data()
-#     except:
-#         return jsonify({'message' : 'error'})
-#     return jsonify({"message" : msg})
+@app.route("/playerdata", methods=["GET"])
+def playerdata():
+    try:
+        name = request.args["name"]
+        msg = Controller(name).get_player_data()
+    except:
+        return jsonify({'message' : 'error'})
+    return jsonify({"message" : msg})
 
 @app.route("/fxmessage", methods=["GET"])
 def fxmessagehandler():
     return fxmessage()
 
-# def game_reset():
-#     game_start = False
-#     current_level = -1
-#     food = 2
-#     options = ["", ""]
-
+def get_items():
+    return ["food", "water", "weapon1", "weapon2", "comm device", "surv tool 1", "surv tool 2", "surv tool 3", "surv tool 4", "surv tool 5"]
 
 if __name__ == '__main__':
     app.run(debug=True)
