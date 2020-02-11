@@ -60,8 +60,9 @@ def event_handler(action, cntrl):
                 elif (30 <= r < 60):
                     msg = "You died!"
                     status["hp"] = 0
+                    options = ["Exit"]
                     cntrl.update_player_status(convert_dict_to_status_db(status))
-                    cntrl.update_player_options(config_options_for_db(["Exit"]))
+                    cntrl.update_player_options(config_options_for_db(options))
                 else:
                     msg = "You found nothing"
                 next_day(cntrl, day, status) 
@@ -117,3 +118,10 @@ def pad_options(options, length=10):
 
 def config_options_for_db(options):
     return ",".join(pad_options(options))
+
+def config_options_for_js(options):
+    options = pad_options(options)
+    d = {}
+    for i in range(1, len(options)+1):
+        d[str(i)] = options[i]
+    return d
