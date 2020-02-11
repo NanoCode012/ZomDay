@@ -125,8 +125,8 @@ def news():
         news = res["news"]
         cntrl.update_player_news("", True)
         
-        news = "It's Day " + str(res["day"]) + ".\\n"
-        return jsonify({"message":news})
+        header_news = "It's Day " + str(res["day"])
+        return jsonify({"header": header_news, "message": news})
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
