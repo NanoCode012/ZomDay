@@ -60,7 +60,7 @@ def event_handler(action, cntrl):
                     msg = "You died!"
                     status["hp"] = 0
                     cntrl.update_player_status(convert_dict_to_status_db(status))
-                    cntrl.update_player_options(config_options_for_db(["EXIT"]))
+                    cntrl.update_player_options(config_options_for_db(["Exit"]))
                 else:
                     msg = "You found nothing"
                 next_day(cntrl, day, status) 
