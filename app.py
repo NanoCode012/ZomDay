@@ -123,9 +123,11 @@ def news():
 
         res = cntrl.get_player_data()
         news = res["news"]
+        if (news == ""): news = "No extra news for today."
         cntrl.update_player_news("", True)
         
         header_news = "It's Day " + str(res["day"])
+
         return jsonify({"header": header_news, "message": news})
     except:
         return jsonify({"message" : "Sorry, please try again"})
