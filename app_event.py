@@ -26,6 +26,7 @@ def event_handler(action, cntrl):
                     msg = "Eating.."
                     resources["food"] -= 1
                     status["hp"] = min(status["hp"]+20, 100)
+                    cntrl.update_player_resources(convert_dict_to_resources_db(resources))
                     cntrl.update_player_status(convert_dict_to_status_db(status))
                 else:
                     msg = "Not enough food"
