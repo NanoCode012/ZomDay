@@ -98,7 +98,7 @@ def start():
         name = request.args["name"].strip()
         Controller(name).add_player()
     except:
-        return jsonify({"message" : "Sorry, invalid name"})
+        return jsonify({"message" : "Loading previous save"})
 
     return jsonify({"message" : name + ", you are at home. Apocalypse happened. You must survive!"})
 
