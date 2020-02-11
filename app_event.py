@@ -69,7 +69,7 @@ def event_handler(action, cntrl):
         else:
             return jsonify({"message" : "invalid action"})
         
-        return jsonify({"message" : msg, "options": pad_options(options)})
+        return jsonify({"message" : msg})
     else:
         return jsonify({"message":"game not started"})
 
