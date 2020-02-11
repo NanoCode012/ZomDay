@@ -170,6 +170,8 @@ def newsandstatus():
         cntrl = Controller(name)
         res = cntrl.get_player_data()
 
+        event_handler_v2(cntrl)
+
         from app_event import convert_status_to_dict
         status = convert_status_to_dict(res["status"].split(","))
 
