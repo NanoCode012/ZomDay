@@ -171,7 +171,7 @@ def newsandstatus():
         return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/resources", methods=["GET"])
-def status():
+def resources():
     try:
         name = request.args["name"].strip()
 
