@@ -90,7 +90,7 @@ def callback():
     except:
         return jsonify({'message' : 'error'})
     print("No error")
-    return jsonify({'message' : msg })
+    return jsonify({'message' : name })
 
 @app.route("/start", methods=["GET"])
 def start():
