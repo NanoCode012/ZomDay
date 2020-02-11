@@ -260,7 +260,7 @@ def takeitem():
 
 @app.route("/ret", methods=["GET"])
 def ret():
-    return jsonify({"message":"1", "message2":"{{DL_goout}}"})
+    return jsonify({"message":"1", "message2":"DL_goout"})
 
 # @app.route("/delete", methods=["GET"])
 # def delete():
