@@ -105,9 +105,11 @@ def event_handler_v2(cntrl):
                 
                 events[1] = day
                 options[7] = "Add Geek as contact"
+                news = "A self-proclaimed geek came to visit and left a message containing his contact. Check it out at Act."
                 cntrl.update_player_events(convert_list_to_events_db(events))
                 cntrl.update_player_options(config_options_for_db(options))
                 cntrl.update_player_news("A self-proclaimed geek came to visit and left a message containing his contact. Check it out at Act.")
+                
         elif (events[0] == 1):
             # if ((events[1] - day == 1 and (0 <= r < 30)) or (events[1] - day == 2 and (0 <= r < 60)) or (events[1] - day == 3)):
             if (day >= 4):
@@ -118,7 +120,7 @@ def event_handler_v2(cntrl):
                 cntrl.update_player_events(convert_list_to_events_db(events))
                 cntrl.update_player_options(config_options_for_db(options))
                 cntrl.update_player_news("You got a message from Geek. He lives nearby. He is asking for some supplies. Check it out at Act.")
-    return jsonify({"message": "success"})
+    return jsonify({"message": news})
 
 
 def add_news(current_news, new_news):

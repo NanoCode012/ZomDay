@@ -69,13 +69,10 @@ class Controller():
                         '''" WHERE `name` = "''' + self.player_name + '''"''')
         mysql.connection.commit()
     def update_player_news(self, news, clear=False):
-        if (not clear):
-            res = self.get_player_data()
-            if (res["news"] != ""):
-                news = res["news"] + "\\n" + news
-            else: news = res["news"]
-        else:
-            news = ""
+        # if (not clear):
+        #     res = self.get_player_data()
+        #     if (res["news"] != ""):
+        #         news = res["news"] + "\\n" + news
 
 
         self.cur.execute('''UPDATE `tbl_players` SET `news`="''' + news + 
@@ -123,14 +120,14 @@ def play():
 
 @app.route("/events", methods=["GET"])
 def events():
-    try:
+    # try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
 
         return event_handler_v2(cntrl)
-    except:
-        return jsonify({"message" : "Sorry, please try again"})
+    # except:
+    #     return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/news", methods=["GET"])
 def news():
@@ -167,7 +164,7 @@ def status():
 
 @app.route("/newsandstatus", methods=["GET"])
 def newsandstatus():
-    try:
+    # try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
@@ -181,14 +178,14 @@ def newsandstatus():
         status_message = "HP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
 
         news_body = res["news"]
-        if (news_body == ""): news_body = "No extra news for today."
-        cntrl.update_player_news("", True)
+        # if (news_body == ""): news_body = "No extra news for today."
+        # cntrl.update_player_news("", True)
         
         news_header = "It's Day " + str(res["day"])
 
         return jsonify({"news_header": news_header, "news_body": news_body, "status_message": status_message})
-    except:
-        return jsonify({"message" : "Sorry, please try again"})
+    # except:
+    #     return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/resources", methods=["GET"])
 def resources():
