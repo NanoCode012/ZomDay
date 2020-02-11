@@ -60,15 +60,16 @@ def event_handler(action, cntrl):
                 elif (30 <= r < 60):
                     msg = "You died!"
                     status["hp"] = 0
+                    options = ["Exit"]
                     cntrl.update_player_status(convert_dict_to_status_db(status))
-                    cntrl.update_player_options(config_options_for_db(["Exit"]))
+                    cntrl.update_player_options(config_options_for_db(options))
                 else:
                     msg = "You found nothing"
                 next_day(cntrl, day, status) 
         else:
             return jsonify({"message" : "invalid action"})
         
-        return jsonify({"message" : msg})
+        return jsonify({"message" : msg, "options": pad_options(options)})
     else:
         return jsonify({"message":"game not started"})
 
