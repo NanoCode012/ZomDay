@@ -73,6 +73,9 @@ class Controller():
             res = self.get_player_data()
             if (res["news"] != ""):
                 news = res["news"] + "\\n" + news
+            else: news = res["news"]
+        else:
+            news = ""
 
 
         self.cur.execute('''UPDATE `tbl_players` SET `news`="''' + news + 
