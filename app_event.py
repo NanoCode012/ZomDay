@@ -158,7 +158,7 @@ def convert_status_to_dict(st):
     return d
 
 def convert_list_to_events_db(e):
-    return ",".join(map(str, e))
+    return ",".join([str(v) for v in e])
 
 def convert_dict_to_status_db(st):
     return str(st["hp"]) + "," + str(st["energy"]) + "," + str(st["thirst"])
