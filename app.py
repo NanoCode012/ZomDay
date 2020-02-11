@@ -132,6 +132,21 @@ def news():
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
+@app.route("/status", methods=["GET"])
+def status():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+
+        from app_event import convert_status_to_dict
+        status = convert_status_to_dict(cntrl.get_player_data()["status"].split(","))
+
+        msg = "HP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
+        return jsonify({"message": msg})
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
+
 @app.route("/newsandstatus", methods=["GET"])
 def newsandstatus():
     try:
@@ -155,18 +170,19 @@ def newsandstatus():
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
-@app.route("/status", methods=["GET"])
+@app.route("/resources", methods=["GET"])
 def status():
     try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
 
-        from app_event import convert_status_to_dict
-        status = convert_status_to_dict(cntrl.get_player_data()["status"].split(","))
+        from app_event import convert_resources_to_dict
+        resources = convert_resources_to_dict(cntrl.get_player_data()["resources"].split(","))
 
-        msg = "HP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
-        return jsonify({"message": msg})
+        food = resources["food"]
+        water = resources["water"]
+        return jsonify({"food": food, "water": water})
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
