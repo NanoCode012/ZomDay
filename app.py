@@ -7,7 +7,7 @@ import json
 # import numpy as np
 
 from app_flex import fxmessage
-from app_event import event_handler
+from app_event import event_handler, event_handler_v2
 
 app = Flask(__name__)
 
@@ -37,7 +37,7 @@ class Controller():
                         `events` varchar(200) NOT NULL
                         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;''')
     def add_player(self):
-        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `status`, `day`, `resources`, `options`, `news`, `events`) VALUES (NULL, "''' + self.player_name + '''", '100,100,100', 1,'3,3,0,0,0,0,0,0,0,0', 'Check supplies,Act,Next Day,Exit,Eat,Drink,Back,Talk to neighbour,Look for food,Back', '', '0,0')''')
+        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `status`, `day`, `resources`, `options`, `news`, `events`) VALUES (NULL, "''' + self.player_name + '''", '100,100,100', 1,'3,3,0,0,0,0,0,0,0,0', 'Check supplies,Act,Next Day,Exit,Eat,Drink,Back,Back,Look for supplies,Back', '', '0,0')''')
         mysql.connection.commit()
     def delete_player(self):
         self.cur.execute('''DELETE FROM `tbl_players` WHERE `name` = "''' + self.player_name + '''"''')
@@ -63,6 +63,10 @@ class Controller():
     def update_player_day(self, day):
         self.cur.execute('''UPDATE `tbl_players` SET `day`=''' + str(day) + 
                         ''' WHERE `name` = "''' + self.player_name + '''"''')
+        mysql.connection.commit()
+    def update_player_events(self, events):
+        self.cur.execute('''UPDATE `tbl_players` SET `events`="''' + events + 
+                        '''" WHERE `name` = "''' + self.player_name + '''"''')
         mysql.connection.commit()
     def update_player_news(self, news, clear=False):
         if (not clear):
@@ -111,6 +115,17 @@ def play():
         cntrl = Controller(name)
 
         return event_handler(action, cntrl)
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
+
+@app.route("/events", methods=["GET"])
+def play():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+
+        return event_handler_v2(cntrl)
     except:
         return jsonify({"message" : "Sorry, please try again"})
 

@@ -1,4 +1,5 @@
 from flask import jsonify
+from random import randint
 
 def event_handler(action, cntrl):
     #may have error when user enters this state without name check
@@ -8,6 +9,7 @@ def event_handler(action, cntrl):
     resources = convert_resources_to_dict(res["resources"].split(","))#see doc for order/item 
     options = res["options"].split(",")
     status = convert_status_to_dict(res["status"].split(","))
+    news = res["news"]
 
     if (day > 0):
         if (action in options):
@@ -18,14 +20,13 @@ def event_handler(action, cntrl):
             elif (action == "Next Day"):
                 msg = "Next day.."
                 next_day(cntrl, day, status)
-
-            elif (action == "Exit"):
+            elif (action == "Exit" or action == "-" or action == " "):
                 msg = "Game over"
             elif (action == "Eat"):
                 if (resources["food"] > 0):
                     msg = "Eating.."
                     resources["food"] -= 1
-                    status["hp"] = min(status["hp"]+20, 100)
+                    status["energy"] = min(status["energy"]+20, 100)
                     cntrl.update_player_resources(convert_dict_to_resources_db(resources))
                     cntrl.update_player_status(convert_dict_to_status_db(status))
                 else:
@@ -41,22 +42,36 @@ def event_handler(action, cntrl):
                     msg = "Not enough water"
             elif (action == "Back"):
                 msg = "Back options"
-            elif (action == "Talk to neighbour"):
+            elif (action == "Add Geek as contact"):
                 energy_needed = 10
                 if (status["energy"] >= energy_needed):
-                    msg = "Neighbour: Hi"
+                    msg = "You added Geek"
+                    options[7] = "Back"
                     status["energy"] = max(status["energy"]-energy_needed, 0)
+                    cntrl.update_player_options(config_options_for_db(options))
                     cntrl.update_player_status(convert_dict_to_status_db(status))
-                    cntrl.update_player_news("Static: You talked to someone!")
                 else:
                     msg = "Not enough energy"
-                next_day(cntrl, day, status)    
-            elif (action == "Look for food"):
-                from random import randint
-                
+                next_day(cntrl, day, status)  
+            elif (action == "Send supplies to Geek"):
+                energy_needed = 30
+                if (status["energy"] >= energy_needed):
+                    msg = "You sent supplies to Geek"
+                    options[7] = "Back"
+                    status["energy"] = max(status["energy"]-energy_needed, 0)
+                    cntrl.update_player_options(config_options_for_db(options))
+                    cntrl.update_player_status(convert_dict_to_status_db(status))
+                else:
+                    msg = "Not enough energy"
+                next_day(cntrl, day, status)     
+            elif (action == "Look for supplies"):
                 r = randint(0, 100)
                 if (0<= r < 30):
                     msg = "Found food!"
+                    food_found = randint(1,3)
+                    news = add_news(news, "You found " + str(food_found) + " food")
+                    resources["food"] += food_found
+                    cntrl.update_player_resources(resources)
                 elif (30 <= r < 60):
                     msg = "You died!"
                     status["hp"] = 0
@@ -72,6 +87,42 @@ def event_handler(action, cntrl):
         return jsonify({"message" : msg})
     else:
         return jsonify({"message":"game not started"})
+
+def event_handler_v2(cntrl):
+    res = cntrl.get_player_data()
+
+    day = res["day"]
+    options = res["options"].split(",")
+    news = res["news"]
+    events = map(int, res["events"].split(","))
+
+    if (day > 0):
+        if (events[0] == 0):
+            r = randint(0, 100)
+            if ((day == 2 and (0 <= r < 30)) or (day == 3 and (0 <= r < 60)) or (day == 4)):
+                events[0] = 1
+                news = add_news(news, "A self-proclaimed geek came to visit and left a message containing his contact. Check it out at Act.")
+                
+                events[1] = day
+                options[7] = "Add Geek as contact"
+                cntrl.update_player_events(convert_list_to_events_db(events))
+                cntrl.update_player_options(config_options_for_db(options))
+                cntrl.update_player_news(news)
+        elif (events[0] == 1):
+            if ((events[1] - day == 1 and (0 <= r < 30)) or (events[1] - day == 2 and (0 <= r < 60)) or (events[1] - day == 3)):
+                events[0] = 2
+                news = add_news(news, "You got a message from Geek. He lives nearby. He is asking for some supplies. Check it out at Act.")
+                
+                events[1] = day
+                options[7] = "Send supplies to Geek"
+                cntrl.update_player_events(convert_list_to_events_db(events))
+                cntrl.update_player_options(config_options_for_db(options))
+                cntrl.update_player_news(news)
+    return jsonify({"message": "success"})
+
+
+def add_news(current_news, new_news):
+    return new_news + "\\n" + current_news
 
 def next_day(cntrl, day, status):
     day += 1
@@ -105,6 +156,9 @@ def convert_status_to_dict(st):
     d["energy"] = int(st[1])
     d["thirst"] = int(st[2])
     return d
+
+def convert_list_to_events_db(e):
+    return ",".join(map(str, e))
 
 def convert_dict_to_status_db(st):
     return str(st["hp"]) + "," + str(st["energy"]) + "," + str(st["thirst"])
