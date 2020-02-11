@@ -142,7 +142,7 @@ def status():
         from app_event import convert_status_to_dict
         status = convert_status_to_dict(cntrl.get_player_data()["status"].split(","))
 
-        msg = "Player Status\\nHP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
+        msg = "HP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
         return jsonify({"message": msg})
     except:
         return jsonify({"message" : "Sorry, please try again"})
