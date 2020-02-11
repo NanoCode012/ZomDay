@@ -94,7 +94,7 @@ def event_handler_v2(cntrl):
     day = res["day"]
     options = res["options"].split(",")
     news = res["news"]
-    events = map(int, res["events"].split(","))
+    events = [int(v) for v in res["events"].split(",")]
 
     if (day > 0):
         r = randint(0, 100)
