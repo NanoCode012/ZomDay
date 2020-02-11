@@ -97,8 +97,8 @@ def event_handler_v2(cntrl):
     events = map(int, res["events"].split(","))
 
     if (day > 0):
+        r = randint(0, 100)
         if (events[0] == 0):
-            r = randint(0, 100)
             if ((day == 2 and (0 <= r < 30)) or (day == 3 and (0 <= r < 60)) or (day == 4)):
                 events[0] = 1
                 news = add_news(news, "A self-proclaimed geek came to visit and left a message containing his contact. Check it out at Act.")

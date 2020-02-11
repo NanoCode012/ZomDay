@@ -119,7 +119,7 @@ def play():
         return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/events", methods=["GET"])
-def play():
+def events():
     try:
         name = request.args["name"].strip()
 
