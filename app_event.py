@@ -166,6 +166,7 @@ def event_handler_v2(cntrl):
             # cntrl.update_player_options(config_options_for_db(options))
             # cntrl.update_player_news(news)
         elif (events[0] == 4 and events[1] == day - 1):
+            cntrl.update_player_news("I got out from the hell hole!", True)
             news = "You survived!"
             ret_action = "Finish?"
             opt = ["Exit", "-"]
