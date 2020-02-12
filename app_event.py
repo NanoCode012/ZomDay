@@ -10,6 +10,7 @@ def event_handler(action, cntrl):
     options = res["options"].split(",")
     status = convert_status_to_dict(res["status"].split(","))
     news = res["news"]
+    events = [int(v) for v in res["events"].split(",")]
 
     if (day > 0):
         if (action in options):
@@ -46,8 +47,10 @@ def event_handler(action, cntrl):
                 energy_needed = 10
                 if (status["energy"] >= energy_needed):
                     msg = "You added Geek"
+                    events[1] = day 
                     options[7] = "Back"
                     status["energy"] = max(status["energy"]-energy_needed, 0)
+                    cntrl.update_player_events(convert_list_to_events_db(events))
                     cntrl.update_player_options(config_options_for_db(options))
                     cntrl.update_player_status(convert_dict_to_status_db(status))
                 else:
@@ -57,8 +60,36 @@ def event_handler(action, cntrl):
                 energy_needed = 30
                 if (status["energy"] >= energy_needed):
                     msg = "You sent supplies to Geek"
+                    event[1] = day
                     options[7] = "Back"
                     status["energy"] = max(status["energy"]-energy_needed, 0)
+                    cntrl.update_player_events(convert_list_to_events_db(events))
+                    cntrl.update_player_options(config_options_for_db(options))
+                    cntrl.update_player_status(convert_dict_to_status_db(status))
+                else:
+                    msg = "Not enough energy"
+                next_day(cntrl, day, status)    
+            elif (action == "Send more supplies to Geek"):
+                energy_needed = 30
+                if (status["energy"] >= energy_needed):
+                    msg = "You sent supplies to Geek, hoping for something."
+                    event[1] = day
+                    options[7] = "Back"
+                    status["energy"] = max(status["energy"]-energy_needed, 0)
+                    cntrl.update_player_events(convert_list_to_events_db(events))
+                    cntrl.update_player_options(config_options_for_db(options))
+                    cntrl.update_player_status(convert_dict_to_status_db(status))
+                else:
+                    msg = "Not enough energy"
+                next_day(cntrl, day, status) 
+            elif (action == "Go with Geek to escape via drones"):
+                energy_needed = 20
+                if (status["energy"] >= energy_needed):
+                    msg = "You escaped with Geek!"
+                    event[1] = day
+                    options = ["Win"]
+                    status["energy"] = max(status["energy"]-energy_needed, 0)
+                    cntrl.update_player_events(convert_list_to_events_db(events))
                     cntrl.update_player_options(config_options_for_db(options))
                     cntrl.update_player_status(convert_dict_to_status_db(status))
                 else:
@@ -96,15 +127,13 @@ def event_handler_v2(cntrl):
     news = res["news"]
     events = [int(v) for v in res["events"].split(",")]
 
-    if (day > 0):
+    if (day > 0 and options == "Back"):
         r = randint(0, 100)
         if (events[0] == 0):
             if ((day == 2 and (0 <= r < 30)) or (day == 3 and (0 <= r < 60)) or (day == 4)):
                 events[0] = 1
-                
-                events[1] = day
                 options[7] = "Add Geek as contact"
-                news = "A self-proclaimed geek came to visit and left a message containing his contact. Check it out at Act."
+                
                 cntrl.update_player_events(convert_list_to_events_db(events))
                 cntrl.update_player_options(config_options_for_db(options))
                 cntrl.update_player_news("A self-proclaimed geek came to visit and left a message containing his contact. Check it out at Act.")
@@ -112,13 +141,28 @@ def event_handler_v2(cntrl):
         elif (events[0] == 1):
             if ((events[1] - day == 1 and (0 <= r < 30)) or (events[1] - day == 2 and (0 <= r < 60)) or (events[1] - day == 3)):
                 events[0] = 2
-                
-                events[1] = day
                 options[7] = "Send supplies to Geek"
+
                 cntrl.update_player_events(convert_list_to_events_db(events))
                 cntrl.update_player_options(config_options_for_db(options))
                 cntrl.update_player_news("You got a message from Geek. He lives nearby. He is asking for some supplies. Check it out at Act.")
-    return jsonify({"message": news})
+        elif (events[0] == 2):
+            events[0] = 3
+            options[7] = "Send more supplies to Geek"
+
+            cntrl.update_player_events(convert_list_to_events_db(events))
+            cntrl.update_player_options(config_options_for_db(options))
+            cntrl.update_player_news("Geek told you of an escape route, but he needs more supplies. Check it out at Act.")
+        elif (events[0] == 3):
+            events[0] = 4
+            options[7] = "Go with Geek to escape via drones"
+
+            cntrl.update_player_events(convert_list_to_events_db(events))
+            cntrl.update_player_options(config_options_for_db(options))
+            cntrl.update_player_news("Geek proposes plan to escape using Giant Drones. Check it out at Act.")
+        elif (events[0] == 4 and events[1] == day - 1):
+            cntrl.update_player_news("You survived!")
+    return jsonify({"message": "Success"})
 
 
 def add_news(current_news, new_news):
