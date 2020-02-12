@@ -129,6 +129,19 @@ def events():
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
+@app.route("/nextday", methods=["GET"])
+def next_day():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+        res = cntrl.get_player_data()
+        from app_event import next_day, convert_status_to_dict
+        next_day(cntrl, res["day"], convert_status_to_dict(res["status"].split(",")))
+        return jsonify({"message":"success"})
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
+
 @app.route("/eat", methods=["GET"])
 def eat():
     try:
