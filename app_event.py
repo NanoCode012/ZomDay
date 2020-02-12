@@ -21,7 +21,7 @@ def event_handler(action, cntrl):
             elif (action == "Next Day"):
                 msg = "Next day.."
                 next_day(cntrl, day, status)
-            elif (action == "Exit" or action == "-" or action == " "):
+            elif (action == "Exit" or action == "-" or action == " " or action == "Win"):
                 msg = "Game over"
             elif (action == "Eat"):
                 if (resources["food"] > 0):
