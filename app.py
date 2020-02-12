@@ -129,7 +129,7 @@ def events():
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
-@app.route("/nextday", methods=["GET"])
+@app.route("/next_day", methods=["GET"])
 def next_day():
     try:
         name = request.args["name"].strip()
