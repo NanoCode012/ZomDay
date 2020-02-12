@@ -126,6 +126,7 @@ def event_handler_v2(cntrl):
     options = res["options"].split(",")
     events = [int(v) for v in res["events"].split(",")]
     news = ""
+    ret_action = ""
     opt = []
     if (day > 0):# and options[7] == "Back"#):
         r = randint(0, 100)
@@ -133,7 +134,8 @@ def event_handler_v2(cntrl):
             if ((day == 2 and (0 <= r < 30)) or (day == 3 and (0 <= r < 60)) or (day == 4)):
                 events[0] = 1
                 # options[7] = "Add Geek as contact"
-                news = "A self-proclaimed geek came to visit and left a message containing his contact. Contact back?"
+                news = "A self-proclaimed geek came to visit and left a message containing his contact. "
+                ret_action = "Contact back?"
                 cntrl.update_player_events(convert_list_to_events_db(events))
                 # cntrl.update_player_options(config_options_for_db(options))
                 # cntrl.update_player_news()
@@ -142,26 +144,30 @@ def event_handler_v2(cntrl):
             if ((day - events[1] == 1 and (0 <= r < 30)) or (day - events[1] == 2 and (0 <= r < 60)) or (day - events[1] == 3)):
                 events[0] = 2
                 # options[7] = "Send supplies to Geek"
-                news = "You got a message from Geek. He lives nearby. He is asking for some supplies. Give him?"
+                news = "You got a message from Geek. He lives nearby. He is asking for some supplies. "
+                ret_action = "Give him?"
                 cntrl.update_player_events(convert_list_to_events_db(events))
                 # cntrl.update_player_options(config_options_for_db(options))
                 # cntrl.update_player_news()
         elif (events[0] == 2):
             events[0] = 3
             # options[7] = "Send more supplies to Geek"
-            news = "Geek told you of an escape route, but he needs more supplies. Send more?"
+            news = "Geek told you of an escape route, but he needs more supplies. "
+            ret_action = "Send more?"
             cntrl.update_player_events(convert_list_to_events_db(events))
             # cntrl.update_player_options(config_options_for_db(options))
             # cntrl.update_player_news()
         elif (events[0] == 3):
             events[0] = 4
             # options[7] = "Go with Geek to escape via drones"
-            news = "Geek proposes plan to escape using Giant Drones. Go?"
+            news = "Geek proposes plan to escape using Giant Drones. "
+            ret_action = "Go?"
             cntrl.update_player_events(convert_list_to_events_db(events))
             # cntrl.update_player_options(config_options_for_db(options))
             # cntrl.update_player_news(news)
         elif (events[0] == 4 and events[1] == day - 1):
             news = "You survived!"
+            ret_action = "Finish?"
             opt = ["Exit", "-"]
             # cntrl.update_player_news()
     if (news == ""): 
@@ -170,7 +176,7 @@ def event_handler_v2(cntrl):
     elif (len(opt) == 0):
         opt = ["Yes", "No"]
 
-    return jsonify({"message": news, "option1": opt[0], "option2": opt[1]})
+    return jsonify({"message": news, "ret_message" : ret_action, "option1": opt[0], "option2": opt[1]})
 
 def next_events_handler(cntrl):
     res = cntrl.get_player_data()
