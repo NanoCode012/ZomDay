@@ -165,6 +165,8 @@ def event_handler_v2(cntrl):
     if (news == ""): 
         news = "No event is happening now."
         opt = ["Continue", "-"]
+    else:
+        opt = ["Yes", "No"]
 
     return jsonify({"message": news, "option1": opt[0], "option2": opt[1]})
 
