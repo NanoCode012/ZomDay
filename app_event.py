@@ -193,7 +193,7 @@ def next_day(cntrl, day, status):
 
     # status["hp"] = max(status["hp"]-10, 0)
     status["thirst"] = max(status["thirst"]-10, 0)
-    status["energy"] = min(status["energy"]-10, 0)
+    status["energy"] = max(status["energy"]-10, 0)
     cntrl.update_player_status(convert_dict_to_status_db(status))
 
 def convert_resources_to_dict(res):

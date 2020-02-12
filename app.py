@@ -176,16 +176,16 @@ def go_out():
 
 @app.route("/eat", methods=["GET"])
 def eat():
-    try:
+    # try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
         from app_event import convert_resources_to_dict, convert_status_to_dict, convert_dict_to_resources_db, convert_dict_to_status_db
         res = cntrl.get_player_data()
-        food = convert_resources_to_dict(res["resources"].split(","))["food"]
+        resources = convert_resources_to_dict(res["resources"].split(","))
         status = convert_status_to_dict(res["status"].split(","))
 
-        if (food >= 1):
+        if (resources["food"] >= 1):
             resources["food"] -= 1
             status["energy"] = min(status["energy"]+20, 100)
             msg = "Food - 1"
@@ -195,8 +195,8 @@ def eat():
             msg = "Not enough food"
 
         return jsonify({"message" : msg})
-    except:
-        return jsonify({"message" : "Sorry, please try again"})
+    # except:
+    #     return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/drink", methods=["GET"])
 def drink():
@@ -206,10 +206,10 @@ def drink():
         cntrl = Controller(name)
         from app_event import convert_resources_to_dict, convert_status_to_dict, convert_dict_to_resources_db, convert_dict_to_status_db
         res = cntrl.get_player_data()
-        water = convert_resources_to_dict(res["resources"].split(","))["water"]
+        resources = convert_resources_to_dict(res["resources"].split(","))
         status = convert_status_to_dict(res["status"].split(","))
 
-        if (water >= 1):
+        if (resources["water"] >= 1):
             resources["water"] -= 1
             status["thirst"] = min(status["thirst"]+20, 100)
             msg = "Water - 1"
