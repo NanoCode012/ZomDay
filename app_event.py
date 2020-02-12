@@ -127,7 +127,7 @@ def event_handler_v2(cntrl):
     news = res["news"]
     events = [int(v) for v in res["events"].split(",")]
 
-    if (day > 0 and options == "Back"):
+    if (day > 0 and options[7] == "Back"):
         r = randint(0, 100)
         if (events[0] == 0):
             if ((day == 2 and (0 <= r < 30)) or (day == 3 and (0 <= r < 60)) or (day == 4)):
