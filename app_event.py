@@ -126,10 +126,8 @@ def event_handler_v2(cntrl):
     options = res["options"].split(",")
     events = [int(v) for v in res["events"].split(",")]
     news = ""
-    opt = ["Continue", ""]
     if (day > 0):# and options[7] == "Back"#):
         r = randint(0, 100)
-        opt = ["Yes", "No"]
         if (events[0] == 0):
             if ((day == 2 and (0 <= r < 30)) or (day == 3 and (0 <= r < 60)) or (day == 4)):
                 events[0] = 1
@@ -164,9 +162,9 @@ def event_handler_v2(cntrl):
         elif (events[0] == 4 and events[1] <= day - 1):
             news = "You survived!"
             # cntrl.update_player_news()
-        else:
-            opt = ["Continue", ""]
-    if (news == ""): news = "Nothing happened."
+    if (news == ""): 
+        news = "Nothing happened."
+        opt = ["Continue", ""]
 
     return jsonify({"message": news, "option1": opt[0], "option2": opt[1]})
 
