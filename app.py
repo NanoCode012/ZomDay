@@ -274,7 +274,8 @@ def newsandstatus():
         cntrl = Controller(name)
 
         res = cntrl.get_player_data()
-        from app_event import convert_status_to_dict
+        from app_event import convert_status_to_dict, convert_resources_to_dict
+        resources = convert_resources_to_dict(res["resources"].split(","))
         status = convert_status_to_dict(res["status"].split(","))
 
         # status_message = "HP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
@@ -303,7 +304,7 @@ def newsandstatus():
         
         news_header = "Day " + str(res["day"])
 
-        return jsonify({"news_header": news_header, "news_body": news_body, "status_message": status_message})
+        return jsonify({"news_header": news_header, "news_body": news_body, "status_message": status_message, "food": resources["food"], "water": resources["water"]})
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
