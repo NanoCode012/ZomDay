@@ -124,46 +124,65 @@ def event_handler_v2(cntrl):
 
     day = res["day"]
     options = res["options"].split(",")
-    news = res["news"]
     events = [int(v) for v in res["events"].split(",")]
+    news = ""
 
-    if (day > 0 and options[7] == "Back"):
+    if (day > 0):# and options[7] == "Back"#):
         r = randint(0, 100)
+        opt = ["Yes", "No"]
         if (events[0] == 0):
             if ((day == 2 and (0 <= r < 30)) or (day == 3 and (0 <= r < 60)) or (day == 4)):
                 events[0] = 1
-                options[7] = "Add Geek as contact"
-                
+                # options[7] = "Add Geek as contact"
+                news = "A self-proclaimed geek came to visit and left a message containing his contact. Contact back?"
                 cntrl.update_player_events(convert_list_to_events_db(events))
-                cntrl.update_player_options(config_options_for_db(options))
-                cntrl.update_player_news("A self-proclaimed geek came to visit and left a message containing his contact. Check it out at Act.")
+                # cntrl.update_player_options(config_options_for_db(options))
+                # cntrl.update_player_news()
                 
         elif (events[0] == 1):
             if ((day - events[1] == 1 and (0 <= r < 30)) or (day - events[1] == 2 and (0 <= r < 60)) or (day - events[1] == 3)):
                 events[0] = 2
-                options[7] = "Send supplies to Geek"
-
+                # options[7] = "Send supplies to Geek"
+                news = "You got a message from Geek. He lives nearby. He is asking for some supplies. Give him?"
                 cntrl.update_player_events(convert_list_to_events_db(events))
-                cntrl.update_player_options(config_options_for_db(options))
-                cntrl.update_player_news("You got a message from Geek. He lives nearby. He is asking for some supplies. Check it out at Act.")
+                # cntrl.update_player_options(config_options_for_db(options))
+                # cntrl.update_player_news()
         elif (events[0] == 2):
             events[0] = 3
-            options[7] = "Send more supplies to Geek"
-
+            # options[7] = "Send more supplies to Geek"
+            news = "Geek told you of an escape route, but he needs more supplies. Send more?"
             cntrl.update_player_events(convert_list_to_events_db(events))
-            cntrl.update_player_options(config_options_for_db(options))
-            cntrl.update_player_news("Geek told you of an escape route, but he needs more supplies. Check it out at Act.")
+            # cntrl.update_player_options(config_options_for_db(options))
+            # cntrl.update_player_news()
         elif (events[0] == 3):
             events[0] = 4
-            options[7] = "Go with Geek to escape via drones"
-
+            # options[7] = "Go with Geek to escape via drones"
+            news = "Geek proposes plan to escape using Giant Drones. Go?"
             cntrl.update_player_events(convert_list_to_events_db(events))
-            cntrl.update_player_options(config_options_for_db(options))
-            cntrl.update_player_news("Geek proposes plan to escape using Giant Drones. Check it out at Act.")
-        elif (events[0] == 4 and events[1] == day - 1):
-            cntrl.update_player_news("You survived!")
-    return jsonify({"message": "Success"})
+            # cntrl.update_player_options(config_options_for_db(options))
+            # cntrl.update_player_news(news)
+        elif (events[0] == 4 and events[1] <= day - 1):
+            news = "You survived!"
+            # cntrl.update_player_news()
+        else:
+            opt = ["Continue", ""]
+    if (news == ""): news = "Nothing happened."
 
+    return jsonify({"message": news, "option1": opt[0], "option2": opt[1]})
+
+def next_events_handler(cntrl):
+    res = cntrl.get_player_data()
+
+    day = res["day"]
+    options = res["options"].split(",")
+    events = [int(v) for v in res["events"].split(",")]
+    news = ""
+
+    events[0] += 1
+    events[1] = day
+
+    cntrl.update_player_events(convert_list_to_events_db(events))
+    return jsonify({"message" : "success"})
 
 def add_news(current_news, new_news):
     return new_news + "\\n" + current_news

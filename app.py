@@ -7,7 +7,7 @@ import json
 # import numpy as np
 
 from app_flex import fxmessage
-from app_event import event_handler, event_handler_v2
+from app_event import event_handler, event_handler_v2, next_events_handler
 
 app = Flask(__name__)
 
@@ -25,7 +25,7 @@ class Controller():
         self.cur = mysql.connection.cursor()
         self.player_name = player_name
 
-    def create_table():
+    def create_table(self):
         self.cur.execute('''CREATE TABLE `tbl_players` (
                         `id` int(11) NOT NULL AUTO_INCREMENT,
                         `name` varchar(200) NOT NULL UNIQUE,
@@ -108,15 +108,15 @@ def start():
 
 @app.route("/play", methods=["GET"])
 def play():
-    # try:
+    try:
         name = request.args["name"].strip()
         action = request.args["action"].strip()
 
         cntrl = Controller(name)
 
         return event_handler(action, cntrl)
-    # except:
-    #     return jsonify({"message" : "Sorry, please try again"})
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/events", methods=["GET"])
 def events():
@@ -126,6 +126,17 @@ def events():
         cntrl = Controller(name)
 
         return event_handler_v2(cntrl)
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
+
+@app.route("/next_events", methods=["GET"])
+def next_events():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+
+        return next_events_handler(cntrl)
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
