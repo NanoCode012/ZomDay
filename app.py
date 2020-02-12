@@ -137,8 +137,13 @@ def next_day():
         cntrl = Controller(name)
         res = cntrl.get_player_data()
         from app_event import next_day, convert_status_to_dict
-        next_day(cntrl, res["day"], convert_status_to_dict(res["status"].split(",")))
-        return jsonify({"message":"success"})
+        status = convert_status_to_dict(res["status"].split(","))
+        next_day(cntrl, res["day"], status)
+        
+        life = "alive"
+        if (status["hp"] <= 0 or status["energy"] <= 0 or status["thirst"] <= 0):
+            life = "dead"
+        return jsonify({"message":"success", "life": life})
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
