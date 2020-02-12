@@ -129,6 +129,42 @@ def events():
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
+@app.route("/eat", methods=["GET"])
+def eat():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+        food = cntrl.get_player_data()["food"]
+
+        if (food >= 1):
+            food -= 1
+            msg = "Food - 1"
+        else:
+            msg = "Not enough food"
+
+        return jsonify({"message" : msg})
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
+
+@app.route("/drink", methods=["GET"])
+def drink():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+        water = cntrl.get_player_data()["water"]
+
+        if (water >= 1):
+            water -= 1
+            msg = "Water - 1"
+        else:
+            msg = "Not enough food"
+
+        return jsonify({"message" : msg})
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
+
 @app.route("/next_events", methods=["GET"])
 def next_events():
     try:
