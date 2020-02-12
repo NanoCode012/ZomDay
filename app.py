@@ -168,8 +168,10 @@ def go_out():
             options = ["Exit"]
             cntrl.update_player_status(convert_dict_to_status_db(status))
             cntrl.update_player_options(config_options_for_db(options))
+            cntrl.update_player_news("You died on your journey", True)
         else:
             msg = "You found nothing"
+            cntrl.update_player_news("You didn't find any food in your last journey", True)
         return jsonify({"message":msg})
     except:
         return jsonify({"message" : "Sorry, please try again"})
