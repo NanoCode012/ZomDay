@@ -273,19 +273,35 @@ def newsandstatus():
 
         cntrl = Controller(name)
 
-        event_handler_v2(cntrl)
-
         res = cntrl.get_player_data()
         from app_event import convert_status_to_dict
         status = convert_status_to_dict(res["status"].split(","))
 
-        status_message = "HP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
+        # status_message = "HP:"+str(status["hp"])+"\\n"+"Energy:"+str(status["energy"])+"\\nThirst:"+str(status["thirst"])
+        status_message = ""
+        if (status["energy"] < 20):
+            status_message += "I feel like my stomache is about to burst in pain. "
+        elif (status["energy"] < 40):
+            status_message += "I am very hungry. "
+        elif (status["energy"] < 70):
+            status_message += "I feel like I need to eat something. "
+        elif (status["energy"] < 100):
+            status_message += "I feel normal. "
 
+        if (status["thirst"] < 20):
+            status_message += "I feel like I won't last long without water. "
+        elif (status["thirst"] < 40):
+            status_message += "I can't feel my throat. "
+        elif (status["thirst"] < 70):
+            status_message += "My throat is starting to feel dry. "
+        elif (status["energy"] < 100):
+            status_message += "I am hydrated. "
+        
         news_body = res["news"]
         if (news_body == ""): news_body = "No extra news for today."
         cntrl.update_player_news("", True)
         
-        news_header = "It's Day " + str(res["day"])
+        news_header = "Day " + str(res["day"])
 
         return jsonify({"news_header": news_header, "news_body": news_body, "status_message": status_message})
     except:
