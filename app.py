@@ -131,12 +131,12 @@ def events():
 
 @app.route("/eat", methods=["GET"])
 def eat():
-    try:
+    # try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
         from app_event import convert_resources_to_dict
-        food = convert_resources_to_dict(cntrl.get_player_data()["resources"])["food"]
+        food = convert_resources_to_dict(cntrl.get_player_data()["resources"].split(","))["food"]
 
         if (food >= 1):
             food -= 1
@@ -145,8 +145,8 @@ def eat():
             msg = "Not enough food"
 
         return jsonify({"message" : msg})
-    except:
-        return jsonify({"message" : "Sorry, please try again"})
+    # except:
+    #     return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/drink", methods=["GET"])
 def drink():
@@ -155,7 +155,7 @@ def drink():
 
         cntrl = Controller(name)
         from app_event import convert_resources_to_dict
-        water = convert_resources_to_dict(cntrl.get_player_data()["resources"])["water"]
+        water = convert_resources_to_dict(cntrl.get_player_data()["resources"].split(","))["water"]
 
         if (water >= 1):
             water -= 1
