@@ -268,7 +268,7 @@ def status():
 
 @app.route("/newsandstatus", methods=["GET"])
 def newsandstatus():
-    try:
+    # try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
@@ -286,7 +286,7 @@ def newsandstatus():
             status_message += "I am very hungry. "
         elif (status["energy"] < 70):
             status_message += "I feel like I need to eat something. "
-        elif (status["energy"] < 100):
+        elif (status["energy"] <= 100):
             status_message += "I feel normal. "
 
         if (status["thirst"] < 20):
@@ -295,7 +295,7 @@ def newsandstatus():
             status_message += "I can't feel my throat. "
         elif (status["thirst"] < 70):
             status_message += "My throat is starting to feel dry. "
-        elif (status["energy"] < 100):
+        elif (status["energy"] <= 100):
             status_message += "I am hydrated. "
         
         news_body = res["news"]
@@ -305,8 +305,8 @@ def newsandstatus():
         news_header = "Day " + str(res["day"])
 
         return jsonify({"news_header": news_header, "news_body": news_body, "status_message": status_message, "food": resources["food"], "water": resources["water"]})
-    except:
-        return jsonify({"message" : "Sorry, please try again"})
+    # except:
+    #     return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/resources", methods=["GET"])
 def resources():
