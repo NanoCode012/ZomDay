@@ -180,12 +180,17 @@ def eat():
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
-        from app_event import convert_resources_to_dict
-        food = convert_resources_to_dict(cntrl.get_player_data()["resources"].split(","))["food"]
+        from app_event import convert_resources_to_dict, convert_status_to_dict, convert_dict_to_resources_db, convert_dict_to_status_db
+        res = cntrl.get_player_data()
+        food = convert_resources_to_dict(res["resources"].split(","))["food"]
+        status = convert_status_to_dict(res["status"].split(","))
 
         if (food >= 1):
-            food -= 1
+            resources["food"] -= 1
+            status["energy"] = min(status["energy"]+20, 100)
             msg = "Food - 1"
+            cntrl.update_player_status(convert_dict_to_status_db(status))
+            cntrl.update_player_resources(convert_dict_to_resources_db(resources))
         else:
             msg = "Not enough food"
 
@@ -199,14 +204,19 @@ def drink():
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
-        from app_event import convert_resources_to_dict
-        water = convert_resources_to_dict(cntrl.get_player_data()["resources"].split(","))["water"]
+        from app_event import convert_resources_to_dict, convert_status_to_dict, convert_dict_to_resources_db, convert_dict_to_status_db
+        res = cntrl.get_player_data()
+        water = convert_resources_to_dict(res["resources"].split(","))["water"]
+        status = convert_status_to_dict(res["status"].split(","))
 
         if (water >= 1):
-            water -= 1
+            resources["water"] -= 1
+            status["thirst"] = min(status["thirst"]+20, 100)
             msg = "Water - 1"
+            cntrl.update_player_status(convert_dict_to_status_db(status))
+            cntrl.update_player_resources(convert_dict_to_resources_db(resources))
         else:
-            msg = "Not enough food"
+            msg = "Not enough water"
 
         return jsonify({"message" : msg})
     except:

@@ -159,8 +159,9 @@ def event_handler_v2(cntrl):
             cntrl.update_player_events(convert_list_to_events_db(events))
             # cntrl.update_player_options(config_options_for_db(options))
             # cntrl.update_player_news(news)
-        elif (events[0] == 4 and events[1] <= day - 1):
+        elif (events[0] == 4 and events[1] == day - 1):
             news = "You survived!"
+            opt = ["Exit", "-"]
             # cntrl.update_player_news()
     if (news == ""): 
         news = "No event is happening now."
@@ -191,9 +192,9 @@ def next_day(cntrl, day, status):
     day += 1
     cntrl.update_player_day(day)
 
-    status["hp"] = max(status["hp"]-10, 0)
+    # status["hp"] = max(status["hp"]-10, 0)
     status["thirst"] = max(status["thirst"]-10, 0)
-    status["energy"] = min(status["energy"]+10, 100)
+    status["energy"] = min(status["energy"]-10, 0)
     cntrl.update_player_status(convert_dict_to_status_db(status))
 
 def convert_resources_to_dict(res):
