@@ -37,7 +37,7 @@ class Controller():
                         `events` varchar(200) NOT NULL
                         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;''')
     def add_player(self):
-        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `status`, `day`, `resources`, `options`, `news`, `events`) VALUES (NULL, "''' + self.player_name + '''", '100,100,100', 1,'3,3,0,0,0,0,0,0,0,0', 'Check supplies,Act,Next Day,Exit,Eat,Drink,Back,Back,Look for supplies,Back', '', '0,0')''')
+        self.cur.execute('''INSERT INTO `tbl_players` (`id`, `name`, `status`, `day`, `resources`, `options`, `news`, `events`) VALUES (NULL, "''' + self.player_name + '''", '100,100,100', 1,'3,3,0,0,0,0,0,0,0,0', 'Check supplies,Act,Next Day,Exit,Eat,Drink,Back,Back,Look for supplies,Back', '', '0,0,0')''')
         mysql.connection.commit()
     def delete_player(self):
         self.cur.execute('''DELETE FROM `tbl_players` WHERE `name` = "''' + self.player_name + '''"''')

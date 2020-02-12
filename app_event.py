@@ -128,11 +128,12 @@ def event_handler_v2(cntrl):
     news = ""
     ret_action = ""
     opt = []
-    if (day > 0):# and options[7] == "Back"#):
+    if (day > 0 and events[2]== 0):# and options[7] == "Back"#):
         r = randint(0, 100)
         if (events[0] == 0):
             if ((day == 2 and (0 <= r < 30)) or (day == 3 and (0 <= r < 60)) or (day == 4)):
                 events[0] = 1
+                events[2] = 1
                 # options[7] = "Add Geek as contact"
                 news = "A self-proclaimed geek came to visit and left a message containing his contact. "
                 ret_action = "Contact back?"
@@ -143,6 +144,7 @@ def event_handler_v2(cntrl):
         elif (events[0] == 1):
             if ((day - events[1] == 1 and (0 <= r < 30)) or (day - events[1] == 2 and (0 <= r < 60)) or (day - events[1] == 3)):
                 events[0] = 2
+                events[2] = 1
                 # options[7] = "Send supplies to Geek"
                 news = "You got a message from Geek. He lives nearby. He is asking for some supplies. "
                 ret_action = "Give him?"
@@ -151,6 +153,7 @@ def event_handler_v2(cntrl):
                 # cntrl.update_player_news()
         elif (events[0] == 2):
             events[0] = 3
+            events[2] = 1
             # options[7] = "Send more supplies to Geek"
             news = "Geek told you of an escape route, but he needs more supplies. "
             ret_action = "Send more?"
@@ -159,14 +162,16 @@ def event_handler_v2(cntrl):
             # cntrl.update_player_news()
         elif (events[0] == 3):
             events[0] = 4
+            events[2] = 1
             # options[7] = "Go with Geek to escape via drones"
             news = "Geek proposes plan to escape using Giant Drones. "
             ret_action = "Go?"
             cntrl.update_player_events(convert_list_to_events_db(events))
             # cntrl.update_player_options(config_options_for_db(options))
             # cntrl.update_player_news(news)
-            cntrl.update_player_news("I got out from the hell hole!", True)
         elif (events[0] == 4 and events[1] == day - 1):
+            events[0] = 5
+            events[2] = 1
             news = "You survived! "
             ret_action = "Finish?"
             opt = ["Exit", "-"]
@@ -188,6 +193,7 @@ def next_events_handler(cntrl):
     news = ""
 
     events[1] = day
+    events[2] = 0
 
     cntrl.update_player_events(convert_list_to_events_db(events))
     return jsonify({"message" : "success"})
