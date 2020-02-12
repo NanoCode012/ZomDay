@@ -60,7 +60,7 @@ def event_handler(action, cntrl):
                 energy_needed = 30
                 if (status["energy"] >= energy_needed):
                     msg = "You sent supplies to Geek"
-                    event[1] = day
+                    events[1] = day
                     options[7] = "Back"
                     status["energy"] = max(status["energy"]-energy_needed, 0)
                     cntrl.update_player_events(convert_list_to_events_db(events))
@@ -73,7 +73,7 @@ def event_handler(action, cntrl):
                 energy_needed = 30
                 if (status["energy"] >= energy_needed):
                     msg = "You sent supplies to Geek, hoping for something."
-                    event[1] = day
+                    events[1] = day
                     options[7] = "Back"
                     status["energy"] = max(status["energy"]-energy_needed, 0)
                     cntrl.update_player_events(convert_list_to_events_db(events))
@@ -86,7 +86,7 @@ def event_handler(action, cntrl):
                 energy_needed = 20
                 if (status["energy"] >= energy_needed):
                     msg = "You escaped with Geek!"
-                    event[1] = day
+                    events[1] = day
                     options = ["Win"]
                     status["energy"] = max(status["energy"]-energy_needed, 0)
                     cntrl.update_player_events(convert_list_to_events_db(events))

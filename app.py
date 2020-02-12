@@ -108,15 +108,15 @@ def start():
 
 @app.route("/play", methods=["GET"])
 def play():
-    try:
+    # try:
         name = request.args["name"].strip()
         action = request.args["action"].strip()
 
         cntrl = Controller(name)
 
         return event_handler(action, cntrl)
-    except:
-        return jsonify({"message" : "Sorry, please try again"})
+    # except:
+    #     return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/events", methods=["GET"])
 def events():
