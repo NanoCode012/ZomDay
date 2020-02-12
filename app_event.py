@@ -139,7 +139,7 @@ def event_handler_v2(cntrl):
                 cntrl.update_player_news("A self-proclaimed geek came to visit and left a message containing his contact. Check it out at Act.")
                 
         elif (events[0] == 1):
-            if ((events[1] - day == 1 and (0 <= r < 30)) or (events[1] - day == 2 and (0 <= r < 60)) or (events[1] - day == 3)):
+            if ((day - events[1] == 1 and (0 <= r < 30)) or (day - events[1] == 2 and (0 <= r < 60)) or (day - events[1] == 3)):
                 events[0] = 2
                 options[7] = "Send supplies to Geek"
 
