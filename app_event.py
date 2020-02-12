@@ -126,6 +126,7 @@ def event_handler_v2(cntrl):
     options = res["options"].split(",")
     events = [int(v) for v in res["events"].split(",")]
     news = ""
+    opt = []
     if (day > 0):# and options[7] == "Back"#):
         r = randint(0, 100)
         if (events[0] == 0):
@@ -166,7 +167,7 @@ def event_handler_v2(cntrl):
     if (news == ""): 
         news = "No event is happening now."
         opt = ["Continue", "-"]
-    else:
+    elif (len(opt) == 0):
         opt = ["Yes", "No"]
 
     return jsonify({"message": news, "option1": opt[0], "option2": opt[1]})
