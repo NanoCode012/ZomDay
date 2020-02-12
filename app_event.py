@@ -126,7 +126,7 @@ def event_handler_v2(cntrl):
     options = res["options"].split(",")
     events = [int(v) for v in res["events"].split(",")]
     news = ""
-
+    opt = ["Continue", ""]
     if (day > 0):# and options[7] == "Back"#):
         r = randint(0, 100)
         opt = ["Yes", "No"]

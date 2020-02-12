@@ -131,7 +131,7 @@ def events():
 
 @app.route("/eat", methods=["GET"])
 def eat():
-    # try:
+    try:
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
@@ -145,8 +145,8 @@ def eat():
             msg = "Not enough food"
 
         return jsonify({"message" : msg})
-    # except:
-    #     return jsonify({"message" : "Sorry, please try again"})
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
 
 @app.route("/drink", methods=["GET"])
 def drink():
