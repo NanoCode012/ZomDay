@@ -135,7 +135,8 @@ def eat():
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
-        food = cntrl.get_player_data()["food"]
+        from app_event import convert_resources_to_dict
+        food = convert_resources_to_dict(cntrl.get_player_data()["resources"])["food"]
 
         if (food >= 1):
             food -= 1
@@ -153,7 +154,8 @@ def drink():
         name = request.args["name"].strip()
 
         cntrl = Controller(name)
-        water = cntrl.get_player_data()["water"]
+        from app_event import convert_resources_to_dict
+        water = convert_resources_to_dict(cntrl.get_player_data()["resources"])["water"]
 
         if (water >= 1):
             water -= 1
