@@ -142,6 +142,38 @@ def next_day():
     except:
         return jsonify({"message" : "Sorry, please try again"})
 
+@app.route("/go_out", methods=["GET"])
+def go_out():
+    try:
+        name = request.args["name"].strip()
+
+        cntrl = Controller(name)
+        res = cntrl.get_player_data()
+
+        from random import randint
+        from app_event import add_news, convert_dict_to_status_db, config_options_for_db, convert_resources_to_dict, convert_status_to_dict
+        
+        resources = convert_resources_to_dict(res["resources"].split(","))
+        status = convert_status_to_dict(res["status"].split(","))
+        r = randint(0, 100)
+        if (0<= r < 30):
+            msg = "Found food!"
+            food_found = randint(1,3)
+            resources["food"] += food_found
+            cntrl.update_player_news("You found " + str(food_found) + " food when you went out", True)
+            cntrl.update_player_resources(resources)
+        elif (30 <= r < 60):
+            msg = "You died!"
+            status["hp"] = 0
+            options = ["Exit"]
+            cntrl.update_player_status(convert_dict_to_status_db(status))
+            cntrl.update_player_options(config_options_for_db(options))
+        else:
+            msg = "You found nothing"
+        return jsonify({"message":msg})
+    except:
+        return jsonify({"message" : "Sorry, please try again"})
+
 @app.route("/eat", methods=["GET"])
 def eat():
     try:
