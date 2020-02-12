@@ -163,8 +163,8 @@ def event_handler_v2(cntrl):
             news = "You survived!"
             # cntrl.update_player_news()
     if (news == ""): 
-        news = "Nothing happened."
-        opt = ["Continue", ""]
+        news = "No event is happening now."
+        opt = ["Continue", "-"]
 
     return jsonify({"message": news, "option1": opt[0], "option2": opt[1]})
 
