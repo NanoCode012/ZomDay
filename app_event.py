@@ -179,7 +179,6 @@ def next_events_handler(cntrl):
     events = [int(v) for v in res["events"].split(",")]
     news = ""
 
-    events[0] += 1
     events[1] = day
 
     cntrl.update_player_events(convert_list_to_events_db(events))
