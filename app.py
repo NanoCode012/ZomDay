@@ -11,10 +11,10 @@ from app_event import event_handler, event_handler_v2, next_events_handler
 
 app = Flask(__name__)
 
-app.config["MYSQL_USER"] = "sql12321899"
-app.config["MYSQL_PASSWORD"] = "rS2Gp9tXEn"
-app.config["MYSQL_HOST"] = "sql12.freemysqlhosting.net"
-app.config["MYSQL_DB"] = "sql12321899"
+app.config["MYSQL_USER"] = ""
+app.config["MYSQL_PASSWORD"] = ""
+app.config["MYSQL_HOST"] = ""
+app.config["MYSQL_DB"] = ""
 app.config["MYSQL_CURSORCLASS"]  = "DictCursor"
 mysql = MySQL(app)
 
